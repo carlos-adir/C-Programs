@@ -30,11 +30,19 @@ typedef struct
 	*/
 }vampiro;
 
+typedef struct
+{
+	char acao1, resposta1; /* Acao e resposta do jogador 1 */
+	char acao2, resposta2; /* Acao e resposta do jogador 2 */
+}relatorio;
+
 vampiro set_vampiro(int vida_max, int porcoes, int ataque, char lifesteal, char precisao)
 {
 	vampiro v = {vida_max, porcoes, ataque, vida_max, lifesteal, precisao, 0};
 	return v;
 }
+
+
 
 /* Para o programa dos alunos, não precisa da função, é somente para */
 /* Função para calcular a probabilidade do vampiro v1 vencer o vampiro v2 */
@@ -43,115 +51,267 @@ double prob_vencer(vampiro *v1, vampiro *v2)
 	return 1;
 }
 
-int combate(vampiro *v1, vampiro *v2)
+relatorio combate(vampiro *v1, vampiro *v2)
 {
-	int aleatorio = rand()%101;
+	int ale1 = rand()%101; /* Variavel para verificar a chance de atordoar */
+	int ale2 = rand()%101; /* Variavel para a acao do jogador 1 */
+	int ale3 = rand()%101; /* Variavel para a acao do jogador 2 */
+	relatorio re = {v1->estado, 0, v2->estado, 0};
+	/* Um vetor para indicar se obteve sucesso no ataque escolhido, bem como as opções */
+	
 	if(v1->estado == 1) 
 	{
 		if(v2->estado == 1) /* Dois ataques rapidos */
 		{
-			v1->vida -= v2->ataque;
-			v2->vida -= v1->ataque;
-			v1->vida += v1->ataque*v1->lifesteal/100;
-			v2->vida += v2->ataque*v2->lifesteal/100;
+			if(ale2 < v1->precisao) /* Se o primeiro jogador acerta o golpe */
+			{
+				v2->vida -= v1->ataque;
+				v1->vida += v1->ataque*v1->lifesteal/100;
+				re.resposta1 = 1;
+				printf("hamam");
+			}
+			if(ale3 < v2->precisao)/* Se o segundo jogador acerta o golpe */
+			{
+				v1->vida -= v2->ataque;
+				v2->vida += v2->ataque*v2->lifesteal/100;
+				re.resposta2 = 1;
+			}
 		}
 		else if(v2->estado == 2) /* Ataque rapido com ataque forte */
 		{
-			v1->vida -= 2*v2->ataque;
-			v1->vida += v1->ataque*v1->lifesteal/100;
-			v2->vida -= v1->ataque;
-			if(aleatorio > PROB_ATORDO)
-				v2->estado = 9;
+			if(ale2 < v1->precisao) /* Se o primeiro jogador acerta o golpe */
+			{
+				v2->vida -= v1->ataque;
+				v1->vida += v1->ataque*v1->lifesteal/100;
+				if(ale1 > PROB_ATORDO)
+					v2->estado = 9;
+				re.resposta1 = 1;
+			}
+			if(ale3 < v2->precisao) /* Se o segundo jogador acerta o golpe */
+			{
+				v1->vida -= 2*v2->ataque;
+				re.resposta2 = 1;
+			}
 		}
 		else if(v2->estado == 3) /* Ataque rapido contra defesa */
 		{
-			v2->vida -= v1->ataque/2;
-			v1->vida += v1->ataque*v1->lifesteal/100;
-			if(aleatorio > PROB_ATORDO)
+			if(ale2 < v1->precisao)
+			{
+				v2->vida -= v1->ataque/2;
+				v1->vida += v1->ataque*v1->lifesteal/200;
+				re.resposta1 = 1;
+			}
+			if(ale1 > PROB_ATORDO) /* Se o segundo jogador acerta o golpe */
 				v1->estado = 9;
+			re.resposta2 = 1;
+		}
+		else if(v2->estado == 4)
+		{
+			if(ale2 < v1->precisao)
+			{
+				v1->vida += v1->ataque*v1->lifesteal/100;
+				v2->vida -= v1->ataque;
+				re.resposta1 = 1;
+			}
+			re.resposta2 = 1;
 		}
 		else
 		{
 			v1->vida += v1->ataque*v1->lifesteal/100;
-			v2->vida -= v1->ataque;
+			v2->vida -= v1->ataque;	
+			re.resposta1 = re.resposta2 = 1;
 		}
 	}
 	else if(v1->estado == 2)
 	{
 		if(v2->estado == 1) /* Ataque forte com ataque rapido */
 		{
-			v2->vida -= 2*v1->ataque;
-			v1->vida -= v2->ataque;
-			v2->vida += v2->ataque*v2->lifesteal/100;
-			if(aleatorio > PROB_ATORDO) /* probabilidade de ser atordoado */
-				v1->estado = 9;	
+			if(ale2 < v1->precisao)
+			{
+				v2->vida -= 2*v1->ataque;
+				re.resposta1 = 1;
+			}
+			if(ale3 < v2->precisao)
+			{
+				v1->vida -= v2->ataque;
+				v2->vida += v2->ataque*v2->lifesteal/100;
+				re.resposta2 = 1;
+				if(ale1 > PROB_ATORDO) /* probabilidade de ser atordoado */
+					v1->estado = 9;	
+			}
 		}
 		else if(v2->estado == 2) /* Ataque forte com ataque forte */
 		{
-			v1->vida -= 2*v2->ataque;
-			v2->vida -= 2*v1->ataque;
+			if(ale2 < v1->precisao)
+			{
+				v2->vida -= 2*v1->ataque;
+				re.resposta1 = 1;
+			}
+			if(ale3 < v2->precisao)
+			{
+				v1->vida -= 2*v2->ataque;
+				re.resposta2 = 1;
+			}
 		}
 		else if(v2->estado == 3) /* Ataque forte com defesa */
 		{
-			v2->vida -= v1->ataque/2;
+			if(ale2 < v1->precisao)
+			{
+				v2->vida -= v1->ataque/2;
+				re.resposta1 = 1;
+			}
 			v1->estado = 9;
+			re.resposta2 = 1;
+		}
+		else if(v2->estado == 4)
+		{
+			if(ale2 < v1->precisao)
+			{
+				v2->vida -= 2*v1->ataque;
+				re.resposta1 = 1;
+			}
+			re.resposta2 = 1;
 		}
 		else
 		{
 			v2->vida -= 2*v1->ataque;
+			re.resposta1 = re.resposta2 = 1;
 		}
 	}
 	else if(v1->estado == 3)
 	{
 		if(v2->estado == 1)
 		{
-			v1->vida -= v2->ataque/2;
-			v2->vida += v2->ataque*v2->lifesteal/100;
-			if(aleatorio > PROB_ATORDO)
-				v2->estado = 9;	
+			if(ale3 < v2->precisao)
+			{
+				v1->vida -= v2->ataque/2;
+				v2->vida += v2->ataque*v2->lifesteal/200;
+				re.resposta2 = 1;
+			}
+			if(ale1 > PROB_ATORDO)
+				v2->estado = 9;
+			re.resposta1 = 1;	
 		}
 		else if(v2->estado == 2)
 		{
-			v1->vida -= v2->ataque/2;
+			if(ale3 < v2->precisao)
+			{
+				v1->vida -= v2->ataque/2;
+				re.resposta2 = 1;
+			}
 			v2->estado = 9;
+			re.resposta1 = 1;
 		}
 		else if(v2->estado == 3)
 		{
 			v1->vida += HEAL_BASE;
 			v2->vida += HEAL_BASE;
+			re.resposta1 = re.resposta2 = 1;
 		}
 		else if(v2->estado == 4)
+		{
 			v1->vida += HEAL_BASE;
+			re.resposta1 = re.resposta2 = 1;
+		}
 	}
-	else /* Atordoado */
+	else if(v1->estado == 4)
+	{
+		if(v2->estado == 1)
+		{
+			if(ale3 < v2->precisao)
+			{
+				v1->vida -= v2->ataque;
+				v2->vida += v2->ataque*v2->lifesteal/100;
+				re.resposta2 = 1;
+			}
+			re.resposta1 = 1;
+		}
+		else if(v2->estado == 2)
+		{
+			if(ale3 < v2->precisao)
+			{
+				v1->vida -= 2*v2->ataque;
+				re.resposta2 = 1;
+			}
+			re.resposta1 = 1;
+		}
+		else if(v2->estado == 3)
+		{
+			v2->vida += HEAL_BASE;
+			re.resposta1 = re.resposta2 = 1;
+		}
+	}
+	else
 	{
 		if(v2->estado == 1)
 		{
 			v1->vida -= v2->ataque;
 			v2->vida += v2->ataque*v2->lifesteal/100;
+			re.resposta1 = re.resposta2 = 1;
 		}
 		else if(v2->estado == 2)
 		{
 			v1->vida -= 2*v2->ataque;
+			re.resposta1 = re.resposta2 = 1;
 		}
 		else if(v2->estado == 3)
 		{
-			v1->vida += HEAL_BASE;
 			v2->vida += HEAL_BASE;
+			re.resposta1 = re.resposta2 = 1;
 		}
+		else
+			re.resposta1 = re.resposta2 = 1;
 	}
 	if(v1->estado == 4)
+	{
 		v1->vida += HEAL_POTION;
+		v1->porcoes -= 1;
+	}
 	if(v2->estado == 4)
+	{
 		v2->vida += HEAL_POTION;
-	if(v1->estado != 9)
+		v2->porcoes -= 1;
+	}
+	if(v1->estado != 9) /* Verifica se está atordoado para a proxima jogada */
 		v1->estado = 0;
-	if(v2->estado != 9)
+	if(v2->estado != 9) /* Verifica se está atordoado para a proxima jogada */
 		v2->estado = 0;
-	return 0;
+	if(v1->vida < 0)
+		v1->vida = 0;
+	else if(v1->vida > v1->vida_max)
+		v1->vida = v1->vida_max;
+	if(v2->vida < 0)
+		v2->vida = 0;
+	else if(v2->vida > v2->vida_max)
+		v2->vida = v2->vida_max;
+	return re;
 }
 
-void menu(vampiro *v1, vampiro *v2)
+void msg(vampiro *v1, vampiro *v2, relatorio *re)
+{
+	if(re->acao1 == 1)
+		printf("Comando: Ataque Rapido!\t\tResultado: %s\n", re->resposta1 == 1 ? "Sucesso" : "Falha");
+	else if(re->acao1 == 2)
+		printf("Comando: Ataque Forte! \t\tResultado: %s\n", re->resposta1 == 1 ? "Sucesso" : "Falha");
+	else if(re->acao1 == 3)
+		printf("Comando: Defesa!       \t\tResultado: %s\n", v1->estado == 9 ? "Você atordoou o adversário" : "Sofreu somente menos dano");
+	else if(re->acao1 == 4)
+		printf("Comando: Porcao!       \t\tResultado: Curou %d de vida\n", HEAL_POTION);
+	else
+		printf("\n");
+	if(re->acao2 == 1)
+		printf("Comando: Ataque Rapido!\t\tResultado: %s\n\n", re->resposta2 == 1 ? "Sucesso" : "Falha");
+	else if(re->acao2 == 2)
+		printf("Comando: Ataque Forte! \t\tResultado: %s\n\n", re->resposta2 == 1 ? "Sucesso" : "Falha");
+	else if(re->acao2 == 3)
+		printf("Comando: Defesa!       \t\tResultado: %s\n\n", v1->estado == 9 ? "Atordoou você" : "Sofreu somente menos dano");
+	else if(re->acao2 == 4)
+		printf("Comando: Porcao!       \t\tResultado: Curou %d de vida\n\n", HEAL_POTION);
+	else
+		printf("\n\n");
+}
+
+void menu(vampiro *v1, vampiro *v2, relatorio *re)
 {
 	system("clear");
 	printf("************\n");
@@ -188,7 +348,9 @@ void menu(vampiro *v1, vampiro *v2)
 	else if(v2->estado == 4)
 		printf("       PORCAO\n\n");
 	else
-		printf("\n\n\n");
+		printf("\n\n");
+
+	msg(v1, v2, re);
 
 	printf("r) Ataque rapido!\n");
 	printf("f) Ataque forte!\n");
@@ -201,6 +363,7 @@ void menu(vampiro *v1, vampiro *v2)
 int main()
 {
 	char resposta = ' ';
+	relatorio re = {0, 0, 0, 0};
 	vampiro v1 = set_vampiro(100, 1, 10, 70, 50);
 	vampiro v2 = set_vampiro(50, 1, 10, 30, 80);
 	srand((unsigned)time(NULL));
@@ -208,7 +371,7 @@ int main()
 	{
 		while(v1.estado == 0)
 		{ /* Captura a resposta do usuario*/
-			menu(&v1, &v2);
+			menu(&v1, &v2, &re);
 			resposta = getchar();
 			getchar();
 			if(resposta == 's')
@@ -237,10 +400,9 @@ int main()
 		if(v2.estado == 9)
 			v2.estado = 0; /* Zero estado passivo, faz nada */
 		/* Combate */
-		resposta = combate(&v1, &v2);
-
+		re = combate(&v1, &v2);
 	}
-	menu(&v1, &v2);
+	menu(&v1, &v2, &re);
 	if(v1.vida == 0)
 		printf("\n\nVoce perdeu! Boa sorta na proxima vez!\n");
 	else
