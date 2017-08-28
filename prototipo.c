@@ -290,23 +290,23 @@ relatorio combate(vampiro *v1, vampiro *v2)
 void msg(vampiro *v1, vampiro *v2, relatorio *re)
 {
 	if(re->acao1 == 1)
-		printf("Comando: Ataque Rapido!\t\tResultado: %s\n", re->resposta1 == 1 ? "Sucesso" : "Falha");
+		printf("   Comando: Ataque Rapido! - Resultado: %s\n", re->resposta1 == 1 ? "Sucesso" : "Falha");
 	else if(re->acao1 == 2)
-		printf("Comando: Ataque Forte! \t\tResultado: %s\n", re->resposta1 == 1 ? "Sucesso" : "Falha");
+		printf("   Comando: Ataque Forte!  - Resultado: %s\n", re->resposta1 == 1 ? "Sucesso" : "Falha");
 	else if(re->acao1 == 3)
-		printf("Comando: Defesa!       \t\tResultado: %s\n", v1->estado == 9 ? "Você atordoou o adversário" : "Sofreu somente menos dano");
+		printf("   Comando: Defesa!        - Resultado: %s\n", v2->estado == 9 ? "Você atordoou o adversário" : "Sofreu somente menos dano");
 	else if(re->acao1 == 4)
-		printf("Comando: Porcao!       \t\tResultado: Curou %d de vida\n", HEAL_POTION);
+		printf("   Comando: Porcao!        - Resultado: Curou %d de vida\n", HEAL_POTION);
 	else
 		printf("\n");
 	if(re->acao2 == 1)
-		printf("Comando: Ataque Rapido!\t\tResultado: %s\n\n", re->resposta2 == 1 ? "Sucesso" : "Falha");
+		printf("   Comando: Ataque Rapido! - Resultado: %s\n\n", re->resposta2 == 1 ? "Sucesso" : "Falha");
 	else if(re->acao2 == 2)
-		printf("Comando: Ataque Forte! \t\tResultado: %s\n\n", re->resposta2 == 1 ? "Sucesso" : "Falha");
+		printf("   Comando: Ataque Forte!  - Resultado: %s\n\n", re->resposta2 == 1 ? "Sucesso" : "Falha");
 	else if(re->acao2 == 3)
-		printf("Comando: Defesa!       \t\tResultado: %s\n\n", v1->estado == 9 ? "Atordoou você" : "Sofreu somente menos dano");
+		printf("   Comando: Defesa!        - Resultado: %s\n\n", v1->estado == 9 ? "Atordoou você" : "Sofreu somente menos dano");
 	else if(re->acao2 == 4)
-		printf("Comando: Porcao!       \t\tResultado: Curou %d de vida\n\n", HEAL_POTION);
+		printf("   Comando: Porcao!        - Resultado: Curou %d de vida\n\n", HEAL_POTION);
 	else
 		printf("\n\n");
 }
@@ -314,50 +314,51 @@ void msg(vampiro *v1, vampiro *v2, relatorio *re)
 void menu(vampiro *v1, vampiro *v2, relatorio *re)
 {
 	system("clear");
-	printf("************\n");
-	printf("* VAMPIROS *\n");
-	printf("************\n");
-	printf("\n\n\n");
-	printf("Voce:        \t\t\tInimigo:\n");
-	printf("Vida:      %03d/%03d\t\tVida:      %03d/%03d\n", v1->vida, v1->vida_max, v2->vida, v2->vida_max);
-	printf("Porcoes:   %02d\t\t\tPorcoes:   %02d\n", v1->porcoes, v2->porcoes);
-	printf("Ataque:    %02d\t\t\tAtaque:    %02d\n", v1->ataque, v2->ataque);
-	printf("Lifesteal: %02d\t\t\tLifesteal: %02d\n", (v1->ataque*v1->lifesteal)/100, (v2->ataque*v2->lifesteal)/100);
-	printf("Acerto:    %03d%%\t\t\tAcerto:    %03d%%\n\n", v1->precisao, v2->precisao);
+	printf("\n");
+	printf("   \t\t  ************\n");
+	printf("   \t\t  * VAMPIROS *\n");
+	printf("   \t\t  ************\n");
+	printf("\n");
+	printf("          Voce         |          Inimigo\n");
+	printf("  Hit Points: %03d/%03d  |  Hit Points: %03d/%03d\n", v1->vida, v1->vida_max, v2->vida, v2->vida_max);
+	printf("     Porcoes: %02d       |     Porcoes: %02d\n", v1->porcoes, v2->porcoes);
+	printf("      Ataque: %02d       |      Ataque: %02d\n", v1->ataque, v2->ataque);
+	printf("  Life-steal: %02d       |  Life-steal: %02d\n", (v1->ataque*v1->lifesteal)/100, (v2->ataque*v2->lifesteal)/100);
+	printf("    Precisao: %03d%%     |    Precisao: %03d%%\n\n", v1->precisao, v2->precisao);
 	
 	if(v1->estado == 9)
-		printf("  *** ATORDOADO ***             ");
+		printf("    *** ATORDOADO ***             ");
 	else if(v1->estado == 1)
-		printf("        RAPIDO                  ");
+		printf("          RAPIDO                  ");
 	else if(v1->estado == 2)
-		printf("        FORTE                   ");
+		printf("          FORTE                   ");
 	else if(v1->estado == 3)
-		printf("      DEFENDER                  ");
+		printf("        DEFENDER                  ");
 	else if(v1->estado == 4)
-		printf("       PORCAO                   ");
+		printf("         PORCAO                   ");
 	else
-		printf("                                ");
+		printf("                                  ");
 	if(v2->estado == 9)
-		printf("  *** ATORDOADO ***\n\n");
+		printf("    *** ATORDOADO ***\n\n");
 	else if(v2->estado == 1)
-		printf("        RAPIDO\n\n");
+		printf("          RAPIDO\n\n");
 	else if(v2->estado == 2)
-		printf("        FORTE\n\n");
+		printf("          FORTE\n\n");
 	else if(v2->estado == 3)
-		printf("      DEFENDER\n\n");
+		printf("        DEFENDER\n\n");
 	else if(v2->estado == 4)
-		printf("       PORCAO\n\n");
+		printf("         PORCAO\n\n");
 	else
 		printf("\n\n");
 
 	msg(v1, v2, re);
 
-	printf("r) Ataque rapido!\n");
-	printf("f) Ataque forte!\n");
-	printf("d) Defender!\n");
-	printf("p) Porcao!\n");
-	printf("s) Sair!\n\n");
-	printf("Digite sua opcao: ");
+	printf("  r) Ataque rapido!\n");
+	printf("  f) Ataque forte!\n");
+	printf("  d) Defender!\n");
+	printf("  p) Porcao!\n");
+	printf("  s) Sair!\n\n");
+	printf("  Digite sua opcao: ");
 }
 
 int main()
@@ -376,7 +377,7 @@ int main()
 			getchar();
 			if(resposta == 's')
 			{
-				printf("\n\nVoce perdeu! Boa sorta na proxima vez!\n");
+				printf("\n\n  Voce perdeu! Boa sorta na proxima vez!\n\n\n");
 				return 0;
 			}
 			else if(resposta == 'r')
@@ -401,12 +402,14 @@ int main()
 			v2.estado = 0; /* Zero estado passivo, faz nada */
 		/* Combate */
 		re = combate(&v1, &v2);
+		if(v2.vida == 0 || v1.vida == 0)
+			break;
 	}
 	menu(&v1, &v2, &re);
 	if(v1.vida == 0)
-		printf("\n\nVoce perdeu! Boa sorta na proxima vez!\n");
+		printf("\n\n  Voce perdeu! Boa sorte na proxima vez!\n\n\n");
 	else
-		printf("\n\nVoce ganhou! Parabens!\n");
+		printf("\n\n  Voce ganhou! Parabens!\n\n\n");
 
 	return 0;
 }
