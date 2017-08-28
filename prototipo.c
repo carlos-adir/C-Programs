@@ -9,13 +9,13 @@
 
 typedef struct
 {
-	int vida, porcoes;
+	int vida, pocoes;
 	const int ataque, vida_max;
 	const char lifesteal, precisao;
 	char estado; /* Recebe 1 se for ataque rapido,
 					Recebe 2 se for ataque forte, 
 					Recebe 3 se for defender, 
-					Recebe 4 se for usar porcao,
+					Recebe 4 se for usar pocao,
 					Recebe 9 se ficar atordoado
 					Recebe 0 se nao houver acao, */
 	/*
@@ -36,9 +36,9 @@ typedef struct
 	char acao2, resposta2; /* Acao e resposta do jogador 2 */
 }relatorio;
 
-vampiro set_vampiro(int vida_max, int porcoes, int ataque, char lifesteal, char precisao)
+vampiro set_vampiro(int vida_max, int pocoes, int ataque, char lifesteal, char precisao)
 {
-	vampiro v = {vida_max, porcoes, ataque, vida_max, lifesteal, precisao, 0};
+	vampiro v = {vida_max, pocoes, ataque, vida_max, lifesteal, precisao, 0};
 	return v;
 }
 
@@ -265,12 +265,12 @@ relatorio combate(vampiro *v1, vampiro *v2)
 	if(v1->estado == 4)
 	{
 		v1->vida += HEAL_POTION;
-		v1->porcoes -= 1;
+		v1->pocoes -= 1;
 	}
 	if(v2->estado == 4)
 	{
 		v2->vida += HEAL_POTION;
-		v2->porcoes -= 1;
+		v2->pocoes -= 1;
 	}
 	if(v1->estado != 9) /* Verifica se está atordoado para a proxima jogada */
 		v1->estado = 0;
@@ -296,7 +296,7 @@ void msg(vampiro *v1, vampiro *v2, relatorio *re)
 	else if(re->acao1 == 3)
 		printf("   Comando: Defesa!        - Resultado: %s\n", v2->estado == 9 ? "Você atordoou o adversário" : "Sofreu somente menos dano");
 	else if(re->acao1 == 4)
-		printf("   Comando: Porcao!        - Resultado: Curou %d de vida\n", HEAL_POTION);
+		printf("   Comando: Pocao!         - Resultado: Curou %d de vida\n", HEAL_POTION);
 	else
 		printf("\n");
 	if(re->acao2 == 1)
@@ -306,7 +306,7 @@ void msg(vampiro *v1, vampiro *v2, relatorio *re)
 	else if(re->acao2 == 3)
 		printf("   Comando: Defesa!        - Resultado: %s\n\n", v1->estado == 9 ? "Atordoou você" : "Sofreu somente menos dano");
 	else if(re->acao2 == 4)
-		printf("   Comando: Porcao!        - Resultado: Curou %d de vida\n\n", HEAL_POTION);
+		printf("   Comando: Pocao!         - Resultado: Curou %d de vida\n\n", HEAL_POTION);
 	else
 		printf("\n\n");
 }
@@ -321,7 +321,7 @@ void menu(vampiro *v1, vampiro *v2, relatorio *re)
 	printf("\n");
 	printf("          Voce         |          Inimigo\n");
 	printf("  Hit Points: %03d/%03d  |  Hit Points: %03d/%03d\n", v1->vida, v1->vida_max, v2->vida, v2->vida_max);
-	printf("     Porcoes: %02d       |     Porcoes: %02d\n", v1->porcoes, v2->porcoes);
+	printf("      Pocoes: %02d       |      Pocoes: %02d\n", v1->pocoes, v2->pocoes);
 	printf("      Ataque: %02d       |      Ataque: %02d\n", v1->ataque, v2->ataque);
 	printf("  Life-steal: %02d       |  Life-steal: %02d\n", (v1->ataque*v1->lifesteal)/100, (v2->ataque*v2->lifesteal)/100);
 	printf("    Precisao: %03d%%     |    Precisao: %03d%%\n\n", v1->precisao, v2->precisao);
@@ -386,7 +386,7 @@ int main()
 				v1.estado = 2;
 			else if(resposta == 'd')
 				v1.estado = 3;
-			else if(resposta == 'p' && v1.porcoes > 0)
+			else if(resposta == 'p' && v1.pocoes > 0)
 				v1.estado = 4;
 		}
 		if(v1.estado == 9)
@@ -395,7 +395,7 @@ int main()
 		while(v2.estado == 0)
 		{
 			v2.estado = rand()%4 + 1;
-			if(v2.estado == 4 && v2.porcoes <= 0)
+			if(v2.estado == 4 && v2.pocoes <= 0)
 				v2.estado = 0;
 		}
 		if(v2.estado == 9)
