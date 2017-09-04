@@ -5,38 +5,16 @@ typedef struct
 {
 	char k[10];
 }KEY;
-char opcao(char *opcoes, int quantidade);
-/* Esta funcao captura um caracter e verifica se é algum caracter dentre as opcoes.
-Caso esteja, retorna o indice da menor posição e caso não contenha, retorna -1 */
-/* Caso a quantidade seja menor que 1, ou seja, 0 ou negativo, ele funciona como um getch */
-char opcao2(char *opcoes, int quantidade);
-/* Requer do usuário um caracter até que ele esteja na lista de opcoes */
-/* Retorna -1 se a quantidade for 0 ou negativo */
-void buffer_clear();
-/* Essa função limpa o buffer do usuário, inclusive o que foi digitado mas ainda não enviado para análise */
-void aperte_tecla(char tecla);
-/* Pede ao usuario para digitar determinada tecla */
-KEY get_key();
-/* Pega uma tecla digitada pelo usuario */
-KEY to_key(char *str);
-/* Transforma uma string para uma tecla, como "ENTER", veja a lista abaixo: 
 
-ENTER; ESC; F2; F3; F4; F5; F6; 
-INSERT; DELETE; PGUP; PGDN; HOME; END;
-UP_KEY; DOWN_KEY; RIGHT_KEY; LEFT_KEY; BACKSPACE
-
-*/
-char key_is_equal(KEY t, char *str);
-/* Compara se uma tecla é equivalente à string */
-static char *key_to_str(KEY t);
-/* Transforma uma tecla em uma string e retorna, veja o exemplo */
-
-
-
-
-
-
-
+char str_equal(const char *str1, const char *str2)
+{
+	int i=0;
+	while(*(str1+i) == *(str2+i) && *(str1+i) != '\0' && *(str2+i) != '\0')
+		i+=1;
+	if(*(str1+i) == *(str2+i))
+		return 1;
+	return 0;
+}
 char opcao(char *opcoes, int quantidade)
 {
 	
@@ -88,6 +66,53 @@ void aperte_tecla(char tecla)
 		while(getch() != tecla);
 	}
 }
+
+KEY t1(int n1)
+{
+	KEY t;
+	t.k[0] = n1;
+	t.k[1] = '\0';
+	return t;
+}
+KEY t2(int n1, int n2)
+{
+	KEY t;
+	t.k[0] = n1;
+	t.k[1] = n2;
+	t.k[2] = '\0';
+	return t;
+}
+KEY t3(int n1, int n2, int n3)
+{
+	KEY t;
+	t.k[0] = n1;
+	t.k[1] = n2;
+	t.k[2] = n3;
+	t.k[3] = '\0';
+	return t;
+}
+KEY t4(int n1, int n2, int n3, int n4)
+{
+	KEY t;
+	t.k[0] = n1;
+	t.k[1] = n2;
+	t.k[2] = n3;
+	t.k[3] = n4;
+	t.k[4] = '\0';
+	return t;
+}
+KEY t5(int n1, int n2, int n3, int n4, int n5)
+{
+	KEY t;
+	t.k[0] = n1;
+	t.k[1] = n2;
+	t.k[2] = n3;
+	t.k[3] = n4;
+	t.k[4] = n5;
+	t.k[5] = '\0';
+	return t;
+}
+
 KEY get_key()
 {
 	KEY t;
@@ -126,60 +151,7 @@ KEY to_key(char *str)
 
 	
 	*/
-	char str_equal(const char *str1, const char *str2)
-	{
-		int i=0;
-		while(*(str1+i) == *(str2+i) && *(str1+i) != '\0' && *(str2+i) != '\0')
-			i+=1;
-		if(*(str1+i) == *(str2+i))
-			return 1;
-		return 0;
-	}
-	KEY t1(int n1)
-	{
-		KEY t;
-		t.k[0] = n1;
-		t.k[1] = '\0';
-		return t;
-	}
-	KEY t2(int n1, int n2)
-	{
-		KEY t;
-		t.k[0] = n1;
-		t.k[1] = n2;
-		t.k[2] = '\0';
-		return t;
-	}
-	KEY t3(int n1, int n2, int n3)
-	{
-		KEY t;
-		t.k[0] = n1;
-		t.k[1] = n2;
-		t.k[2] = n3;
-		t.k[3] = '\0';
-		return t;
-	}
-	KEY t4(int n1, int n2, int n3, int n4)
-	{
-		KEY t;
-		t.k[0] = n1;
-		t.k[1] = n2;
-		t.k[2] = n3;
-		t.k[3] = n4;
-		t.k[4] = '\0';
-		return t;
-	}
-	KEY t5(int n1, int n2, int n3, int n4, int n5)
-	{
-		KEY t;
-		t.k[0] = n1;
-		t.k[1] = n2;
-		t.k[2] = n3;
-		t.k[3] = n4;
-		t.k[4] = n5;
-		t.k[5] = '\0';
-		return t;
-	}
+	
 	if(str_equal(str, "ENTER"))
 		return t1(10);
 	else if(str_equal(str, "ESC"))
@@ -230,26 +202,7 @@ KEY to_key(char *str)
 }
 char key_is_equal(KEY t, char *str)
 {
-	char str_equal(const char *str1, const char *str2)
-	{
-		int i=0;
-		/* 
-		printf("Comparando: ");
-		imprime(str1);
-		printf(" e ");
-		imprime(str2);
-		printf("\n");
-		*/
-		while(*(str1+i) == *(str2+i) && *(str1+i) != '\0' && *(str2+i) != '\0')
-			i+=1;
-		if(*(str1+i) == *(str2+i))
-			return 1;
-		return 0;
-	}
 	KEY p = to_key(str);
-	/* imprime(p.k);
-	imprime(t.k);
-	printf("\n"); */
 	return str_equal(t.k, p.k);
 }
 static char *key_to_str(KEY t)
