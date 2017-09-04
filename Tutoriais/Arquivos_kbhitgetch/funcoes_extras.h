@@ -1,0 +1,304 @@
+#include <stdio.h>
+#include "kbhitgetch.h"
+
+typedef struct
+{
+	char k[10];
+}KEY;
+char opcao(char *opcoes, int quantidade);
+/* Esta funcao captura um caracter e verifica se é algum caracter dentre as opcoes.
+Caso esteja, retorna o indice da menor posição e caso não contenha, retorna -1 */
+/* Caso a quantidade seja menor que 1, ou seja, 0 ou negativo, ele funciona como um getch */
+char opcao2(char *opcoes, int quantidade);
+/* Requer do usuário um caracter até que ele esteja na lista de opcoes */
+/* Retorna -1 se a quantidade for 0 ou negativo */
+void buffer_clear();
+/* Essa função limpa o buffer do usuário, inclusive o que foi digitado mas ainda não enviado para análise */
+void aperte_tecla(char tecla);
+/* Pede ao usuario para digitar determinada tecla */
+KEY get_key();
+/* Pega uma tecla digitada pelo usuario */
+KEY to_key(char *str);
+/* Transforma uma string para uma tecla, como "ENTER", veja a lista abaixo: 
+
+ENTER; ESC; F2; F3; F4; F5; F6; 
+INSERT; DELETE; PGUP; PGDN; HOME; END;
+UP_KEY; DOWN_KEY; RIGHT_KEY; LEFT_KEY; BACKSPACE
+
+*/
+char key_is_equal(KEY t, char *str);
+/* Compara se uma tecla é equivalente à string */
+static char *key_to_str(KEY t);
+/* Transforma uma tecla em uma string e retorna, veja o exemplo */
+
+
+
+
+
+
+
+char opcao(char *opcoes, int quantidade)
+{
+	
+	int i = 0;
+	char c = getch();
+	if(quantidade < 1)
+		return c;
+	while(i < quantidade) /* */
+	{
+		if(*(opcoes+i) == c)
+			return i;
+		i++;
+	}
+	return -1;
+}
+void buffer_clear()
+{
+	/* Essa função limpa o buffer do usuário, inclusive o que foi digitado mas ainda não enviado para análise */
+	while(kbhit())
+		getch();
+}
+char opcao2(char *opcoes, int quantidade)
+{
+	/* Requer do usuário um caracter até que ele esteja na lista de opcoes */
+	/* Retorna -1 se a quantidade for 0 ou negativo */
+	char c = -1;
+	if(quantidade < 1)
+		return -1;
+	while(c == -1)
+		c = opcao(opcoes, quantidade);
+	return c;
+}
+void aperte_tecla(char tecla)
+{
+	buffer_clear();
+	if(!tecla)
+	{
+		printf("\n\nAperte qualquer tecla para continuar...");
+		getch();
+	}
+	else
+	{
+		if(tecla == 27) /* Numero referente ao ESC */
+			printf("\n\nAperte ESC para continuar..."); 
+		else if(tecla == 10) /* Numero referente ao ENTER */
+			printf("\n\nAperte ENTER para continuar...");
+		else
+			printf("\n\nAperte %c para continuar...", tecla);
+		while(getch() != tecla);
+	}
+}
+KEY get_key()
+{
+	KEY t;
+	int i = 0;
+	do
+	{
+		t.k[i] = getch();
+		i += 1;
+	}while(kbhit() && i < 9);
+	t.k[i] = '\0';
+	return t;
+}
+KEY to_key(char *str)
+{
+	/*
+
+		\0 			= 0
+	ENTER 		= 10
+	ESC 		= 27
+	F2 			= 27 79 81
+	F3			= 27 79 82
+	F4			= 27 79 83
+	F5			= 27 91 49 53 126
+	F6			= 27 91 49 55 126
+	INSERT 		= 27 91 50 126
+	DELETE 		= 27 91 51 126
+	PGUP 		= 27 91 53 126
+	PGDN 		= 27 91 54 126
+	HOME 		= 27 91 72
+	END 		= 27 91 70
+	UP_KEY 		= 27 91 65
+	DOWN_KEY 	= 27 91 66
+	RIGHT_KEY 	= 27 91 67
+	LEFT_KEY 	= 27 91 68
+	BACKSPACE 	= 127
+
+	
+	*/
+	char str_equal(const char *str1, const char *str2)
+	{
+		int i=0;
+		while(*(str1+i) == *(str2+i) && *(str1+i) != '\0' && *(str2+i) != '\0')
+			i+=1;
+		if(*(str1+i) == *(str2+i))
+			return 1;
+		return 0;
+	}
+	KEY t1(int n1)
+	{
+		KEY t;
+		t.k[0] = n1;
+		t.k[1] = '\0';
+		return t;
+	}
+	KEY t2(int n1, int n2)
+	{
+		KEY t;
+		t.k[0] = n1;
+		t.k[1] = n2;
+		t.k[2] = '\0';
+		return t;
+	}
+	KEY t3(int n1, int n2, int n3)
+	{
+		KEY t;
+		t.k[0] = n1;
+		t.k[1] = n2;
+		t.k[2] = n3;
+		t.k[3] = '\0';
+		return t;
+	}
+	KEY t4(int n1, int n2, int n3, int n4)
+	{
+		KEY t;
+		t.k[0] = n1;
+		t.k[1] = n2;
+		t.k[2] = n3;
+		t.k[3] = n4;
+		t.k[4] = '\0';
+		return t;
+	}
+	KEY t5(int n1, int n2, int n3, int n4, int n5)
+	{
+		KEY t;
+		t.k[0] = n1;
+		t.k[1] = n2;
+		t.k[2] = n3;
+		t.k[3] = n4;
+		t.k[4] = n5;
+		t.k[5] = '\0';
+		return t;
+	}
+	if(str_equal(str, "ENTER"))
+		return t1(10);
+	else if(str_equal(str, "ESC"))
+		return t1(27);
+	else if(str_equal(str, "BACKSPACE"))
+		return t1(127);
+	else if(str_equal(str, "UP_KEY"))
+		return t3(27, 91, 65);
+	else if(str_equal(str, "DOWN_KEY"))
+		return t3(27, 91, 66);
+	else if(str_equal(str, "RIGHT_KEY"))
+		return t3(27, 91, 67);
+	else if(str_equal(str, "LEFT_KEY"))
+		return t3(27, 91, 68);
+	else if(str_equal(str, "F2"))
+		return t3(27, 79, 81);
+	else if(str_equal(str, "F3"))
+		return t3(27, 79, 82);
+	else if(str_equal(str, "F4"))
+		return t3(27, 79, 83);
+	else if(str_equal(str, "F5"))
+		return t5(27, 91, 49, 53, 126);
+	else if(str_equal(str, "F6"))
+		return t5(27, 91, 49, 55, 126);
+	else if(str_equal(str, "INSERT"))
+		return t4(27, 91, 50, 126);
+	else if(str_equal(str, "DELETE"))
+		return t4(27, 91, 51, 126);
+	else if(str_equal(str, "PGUP"))
+		return t4(27, 91, 53, 126);
+	else if(str_equal(str, "PGDN"))
+		return t4(27, 91, 54, 126);
+	else if(str_equal(str, "HOME"))
+		return t3(27, 91, 72);
+	else if(str_equal(str, "END"))
+		return t3(27, 91, 70);
+	else
+	{
+		int i = 0;
+		KEY t;
+		while(*(str+i) != '\0')
+		{
+			t.k[i] = *(str+i);
+			i+=1;
+		}
+		return t;
+	}
+}
+char key_is_equal(KEY t, char *str)
+{
+	char str_equal(const char *str1, const char *str2)
+	{
+		int i=0;
+		/* 
+		printf("Comparando: ");
+		imprime(str1);
+		printf(" e ");
+		imprime(str2);
+		printf("\n");
+		*/
+		while(*(str1+i) == *(str2+i) && *(str1+i) != '\0' && *(str2+i) != '\0')
+			i+=1;
+		if(*(str1+i) == *(str2+i))
+			return 1;
+		return 0;
+	}
+	KEY p = to_key(str);
+	/* imprime(p.k);
+	imprime(t.k);
+	printf("\n"); */
+	return str_equal(t.k, p.k);
+}
+static char *key_to_str(KEY t)
+{
+	if(key_is_equal(t, "ENTER"))
+		return "ENTER";
+	else if(key_is_equal(t, "ESC"))
+		return "Foi apertado ESC";
+	else if(key_is_equal(t, "INSERT"))
+		return "INSERT";
+	else if(key_is_equal(t, "DELETE"))
+		return "DELETE";
+	else if(key_is_equal(t, "PGUP"))
+		return "PGUP";
+	else if(key_is_equal(t, "PGDN"))
+		return "PGDN";
+	else if(key_is_equal(t, "HOME"))
+		return "HOME";
+	else if(key_is_equal(t, "END"))
+		return "END";
+	else if(key_is_equal(t, "UP_KEY"))
+		return "UP_KEY";
+	else if(key_is_equal(t, "DOWN_KEY"))
+		return "DOWN_KEY";
+	else if(key_is_equal(t, "RIGHT_KEY"))
+		return "RIGHT_KEY";
+	else if(key_is_equal(t, "LEFT_KEY"))
+		return "LEFT_KEY";
+	else if(key_is_equal(t, "BACKSPACE"))
+		return "BACKSPACE";
+	else if(key_is_equal(t, "F2"))
+		return "F2";
+	else if(key_is_equal(t, "F3"))
+		return "F3";
+	else if(key_is_equal(t, "F4"))
+		return "F4";
+	else if(key_is_equal(t, "F5"))
+		return "F5";
+	else if(key_is_equal(t, "F6"))
+		return "F6";
+	else
+	{
+		static char v[5];
+		if(t.k[1] == '\0')
+			sprintf(v, "%c", t.k[0]);
+		else if(t.k[2] == '\0' && t.k[0] == 27)
+			sprintf(v, "Alt+%c", t.k[1]);
+		else
+			sprintf(v, "%s", t.k);
+		return v;
+	}
+}
