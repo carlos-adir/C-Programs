@@ -4,18 +4,20 @@
 #include "pilha_num.h"		/* Toda a estrutura de dados para utilizacao de pilha, insercao, remocao, impressao etc */
 #include "rpn.h"			/* As operacoes de uma calculadora RPN */
 /*#include "pilha_var.h"*/
+#include "pilha_char.h"		/* Uma pilha de caracteres */
+#include "expressao.h"		/* Contem as funcoes necessarias para a parte de expressoes */
 
 #define wait 2
 
 /* Informações uteis do header "entrada_dados.h" */
 char getch();
 int kbhit();
-struct KEY;
 void buffer_clear();
-void aperte_tecla(char tecla);
+struct KEY;
 KEY get_key();
 KEY to_key(char *str);
 char key_is_equal(KEY t, char *str);
+void press_key(char *str);
 
 /* Informacoes uteis do header "data.h" */
 struct DATA;
@@ -32,10 +34,10 @@ struct PILHA_NUM;
 PILHA_NUM ** create_PILHA_NUM();
 int size_PILHA_NUM(PILHA_NUM **l);
 char at_least_PILHA_NUM(PILHA_NUM **l, int q);
-void imprime_PILHA_NUM(PILHA_NUM **l);
 int append_PILHA_NUM(DATA t, PILHA_NUM **l);
 PILHA_NUM *remove_PILHA_NUM(PILHA_NUM **l);
 int libera_PILHA_NUM(PILHA_NUM **l);
+int imprime_PILHA_NUM(PILHA_NUM **l);
 void abre_toda_lista_numerica(PILHA_NUM **l);
 
 /* Informacoes uteis do header "rpn.h" */
@@ -68,7 +70,7 @@ void menu_principal()
 
 void menu_expressao()
 {	
-	/* system("clear"); */
+	system("clear");
 	printf("*****************************\n");
 	printf("* CALCULADORA DE EXPRESSOES *\n");
 	printf("*****************************\n");
@@ -80,7 +82,7 @@ void menu_expressao()
 
 void menu_rpn(PILHA_NUM **l)
 {
-	/* system("clear"); */
+	system("clear");
 	printf("************************\n");
 	printf("* CALCULADORA MODO RPN *\n");
 	printf("************************\n");
@@ -93,24 +95,84 @@ void menu_rpn(PILHA_NUM **l)
 
 void inicia_expressao()
 {
-	PILHA_NUM **l = create_PILHA_NUM();
+	PILHA_NUM **l = NULL;
+	PILHA_CHAR **p = NULL;
+	char entrada[500];
+	double w;
+	/* char resposta; */
 	while(1)
 	{
 		menu_expressao();
+		scanf("%99[^\n]", entrada);
+		while(getchar()!='\n');
+		if(!strcmp(entrada, "exit"))
+			break;	
+		else if(!strcmp(entrada, "options"))
+			break;
+		else
+		{
+			if(!possivel_criar_pilhas(&l, &p))
+			{
+				printf("Nao foi possivel criar as pilhas!\n");
+				continue;
+			}
+			/* Aqui as pilhas ja estao alocadas */
+			/* printf("Em cima de trata_expressao:\n");
+			imprime_estado(l, p); DEBUGAR */
+			if(!trata_expressao(entrada, l, p))
+			{
+				printf("Entrada invalida!\n");
+			}
+			else
+			{
+				if(delay != 0)
+				{
+					imprime_ambas_pilhas(l, p);
+					printf("Temos agora nossa entrada é mostrada acima.\n");
+					usleep(2*delay);
+				}
+				inverte_pilha(&l, &p); /* Invertemos pois queremos os primeiros numeros no topo da lista */
+				if(delay != 0)
+				{
+					imprime_ambas_pilhas(l, p);
+					printf("Invertemos a nossa entrada.\n");
+					usleep(2*delay);
+				}
+				resolve(&w, l, p);
+				sleep(5);
+			}
+			/*imprime_ambas_pilhas(p, l);*/
+			/* printf("Em baixo de trata_expressao:\n");
+			imprime_estado(l, p); DEBUGAR */
+			libera_PILHA_NUM(l);
+			libera_PILHA_CHAR(p);
+		}
 	}
 }
 
 void instrucoes()
 {
-	printf("")
+	printf("**************************************\n");
+	printf("*                                    *\n");
+	printf("*                                    *\n");
+	printf("*                                    *\n");
+	printf("*                                    *\n");
+	printf("*                                    *\n");
+	printf("**************************************\n");
 }
 
-void inicia_rpn()
+int inicia_rpn()
 {
+	printf("Antes\n");
+	fflush(stdin);
 	PILHA_NUM **l = create_PILHA_NUM();
+	printf("Antes2\n");
+	fflush(stdin);
 	char entrada[100];
 	double w;
 	char resposta;
+	if(l == NULL)
+		return 0;
 	while(1)
 	{
 		menu_rpn(l);
@@ -120,7 +182,7 @@ void inicia_rpn()
 			break;
 		else if(!strcmp(entrada, "num"))
 		{
-			abre_toda_lista_numerica(l);
+			/*abre_toda_lista_numerica(l);*/
 		}
 		else if(!strcmp(entrada, "+"))
 		{
@@ -166,10 +228,17 @@ void inicia_rpn()
 		else
 		{
 			w = atof(entrada);
-			append_PILHA_NUM(create_DATA(w), l);
+			printf("ahn?!\n");
+			resposta = append_PILHA_NUM(create_DATA(w), l);
+			if(resposta == 0)
+			{
+				printf("Nao e possivel adicionar outro elemento na pilha!\n");
+				sleep(wait);
+			}
 		}
 	}
 	libera_PILHA_NUM(l);
+	return 1;
 }
 
 int main()
@@ -179,10 +248,11 @@ int main()
 	{
 		menu_principal();
 		k = get_key();
+		buffer_clear();
 		if(key_is_equal(k, "1"))
 			inicia_expressao();
 		else if(key_is_equal(k, "2"))
-			inicia_rpn();
+			printf("%d\n", inicia_rpn());
 		else if(key_is_equal(k, "3"))
 			instrucoes();
 		else if(key_is_equal(k, "4"))

@@ -53,10 +53,10 @@ int div_PILHA_NUM(PILHA_NUM **l)
 	{
 		/* Operacao de soma */
 		aux = remove_PILHA_NUM(l);
-		if(equal_DATA(aux->info, create_DATA(0)))
+		if(equal_DATA((*l)->info, create_DATA(0)))
 		{
-			free(aux);
-			append_PILHA_NUM(create_DATA(0), l);
+			aux->prox = *l;
+			*l = aux;
 			return -1;
 		}
 		(*l)->info = div_DATA(aux->info, (*l)->info);

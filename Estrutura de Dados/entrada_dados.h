@@ -81,25 +81,7 @@ char opcao2(char *opcoes, int quantidade)
 		c = opcao(opcoes, quantidade);
 	return c;
 }
-void aperte_tecla(char tecla)
-{
-	buffer_clear();
-	if(!tecla)
-	{
-		printf("\n\nAperte qualquer tecla para continuar...");
-		getch();
-	}
-	else
-	{
-		if(tecla == 27) /* Numero referente ao ESC */
-		printf("\n\nAperte ESC para continuar..."); 
-		else if(tecla == 10) /* Numero referente ao ENTER */
-		printf("\n\nAperte ENTER para continuar...");
-		else
-			printf("\n\nAperte %c para continuar...", tecla);
-		while(getch() != tecla);
-	}
-}
+
 
 KEY t1(int n1)
 {
@@ -230,6 +212,7 @@ KEY to_key(char *str)
 			t.k[i] = *(str+i);
 			i+=1;
 		}
+		t.k[i] = '\0';
 		return t;
 	}
 }
@@ -238,6 +221,24 @@ char key_is_equal(KEY t, char *str)
 	KEY p = to_key(str);
 	return strcmp(t.k, p.k) == 0 ? 1 : 0;
 }
+void press_key(char *str)
+{
+	KEY t;
+	buffer_clear();
+	if(strlen(str) == 0)
+	{
+		printf("\n\nAperte qualquer tecla para continuar...");
+		get_key();
+	}
+	else
+	{
+		printf("\n\nAperte %s para continuar...", str); 
+		do{
+			t = get_key();
+		}while(!key_is_equal(t, str));
+	}
+}
+
 /*
 static char *key_to_str(KEY t)
 {
