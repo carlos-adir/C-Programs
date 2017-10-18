@@ -1,23 +1,18 @@
 #include <time.h>
-#include "entrada_dados.h" 	/* Funcoes para entrada de dados, contem o necessario para os 'keys' utilizados*/
+#include "entrada.h" 		/* Funcoes para entrada de dados, contem o necessario para os 'keys' utilizados*/
 #include "data.h"			/* Toda as operações do tipo DATA, inclui a estrutura DATA e as operacoes de soma, subtracao, divisao e multiplicacao */
 #include "pilha_num.h"		/* Toda a estrutura de dados para utilizacao de pilha, insercao, remocao, impressao etc */
 #include "rpn.h"			/* As operacoes de uma calculadora RPN */
-/*#include "pilha_var.h"*/
 #include "pilha_char.h"		/* Uma pilha de caracteres */
 #include "expressao.h"		/* Contem as funcoes necessarias para a parte de expressoes */
 
 #define wait 2
 
-/* Informações uteis do header "entrada_dados.h" */
-char getch();
-int kbhit();
+/* Informacoes utilizadas do header "entrada_dados.h" */
 void buffer_clear();
 struct KEY;
 KEY get_key();
-KEY to_key(char *str);
 char key_is_equal(KEY t, char *str);
-void press_key(char *str);
 
 /* Informacoes uteis do header "data.h" */
 struct DATA;
@@ -32,13 +27,13 @@ DATA div_DATA(DATA t1, DATA t2);
 /* Informacoes uteis do header "pilha_num.h" */
 struct PILHA_NUM;
 PILHA_NUM ** create_PILHA_NUM();
-int size_PILHA_NUM(PILHA_NUM **l);
-char at_least_PILHA_NUM(PILHA_NUM **l, int q);
 int append_PILHA_NUM(DATA t, PILHA_NUM **l);
 PILHA_NUM *remove_PILHA_NUM(PILHA_NUM **l);
 int libera_PILHA_NUM(PILHA_NUM **l);
+int trade_PILHA_NUM(PILHA_NUM **l, PILHA_NUM **l_aux);
+char at_least_PILHA_NUM(PILHA_NUM **l, int q);
 int imprime_PILHA_NUM(PILHA_NUM **l);
-void abre_toda_lista_numerica(PILHA_NUM **l);
+
 
 /* Informacoes uteis do header "rpn.h" */
 int soma_PILHA_NUM(PILHA_NUM **l);
@@ -139,13 +134,13 @@ void inicia_expressao()
 					usleep(2*delay);
 				}
 				resolve(&w, l, p);
-				sleep(5);
 			}
+			libera_PILHA_NUM(l);
+			libera_PILHA_CHAR(p);
+			sleep(5);
 			/*imprime_ambas_pilhas(p, l);*/
 			/* printf("Em baixo de trata_expressao:\n");
 			imprime_estado(l, p); DEBUGAR */
-			libera_PILHA_NUM(l);
-			libera_PILHA_CHAR(p);
 		}
 	}
 }

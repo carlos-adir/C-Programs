@@ -21,7 +21,7 @@ int sub_PILHA_NUM(PILHA_NUM **l)
 	{
 		/* Operacao de soma */
 		aux = remove_PILHA_NUM(l);
-		(*l)->info = sub_DATA(aux->info, (*l)->info);
+		(*l)->info = sub_DATA((*l)->info, aux->info);
 		free(aux);
 		return 1;
 	}
@@ -59,7 +59,7 @@ int div_PILHA_NUM(PILHA_NUM **l)
 			*l = aux;
 			return -1;
 		}
-		(*l)->info = div_DATA(aux->info, (*l)->info);
+		(*l)->info = div_DATA((*l)->info, aux->info);
 		free(aux);
 		return 1;
 	}

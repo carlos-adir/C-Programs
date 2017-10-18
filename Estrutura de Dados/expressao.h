@@ -25,11 +25,15 @@ char prioridade(char c)
 {
 	if(c == '\0')
 		return 0;
-	if(c == '+' || c == '-')
+	if(c == '+')
 		return 1;
-	if(c == '*' || c == '/')
-		return 2;
-	return 3;
+	if(c == '-')
+		return 1;
+	if(c == '*')
+		return 3;
+	if(c == '/')
+		return 3;
+	return 5;
 }
 /*
 void imprime_estado(PILHA_NUM **l, PILHA_CHAR **p)
@@ -253,7 +257,7 @@ void copia(char *para,const char *onde, int q)
 
 int trata_expressao(char *str, PILHA_NUM **l, PILHA_CHAR **p)
 { /* Essa funcao simplesmente separa os simbolos dos numeros */
-	int i=0, j = 0;
+	int i=0, j = 0, parenteses = 0;
 	char new_number[50];
 	/*  printf("Na trata_expressao:\n");
 	imprime_estado(l, p); DEBUGAR */ 
@@ -272,6 +276,10 @@ int trata_expressao(char *str, PILHA_NUM **l, PILHA_CHAR **p)
 			if(simbolo(*(str+i)))
 			{
 				append_PILHA_CHAR(*(str+i), p);
+				if(*(str+i) == '(')
+					parenteses += 1;
+				else if(*(str+i) == ')')
+					parenteses -= 1;
 				i += 1;
 			}
 			else if(isdigit(*(str+i)) || *(str+i) == '.')
@@ -293,6 +301,11 @@ int trata_expressao(char *str, PILHA_NUM **l, PILHA_CHAR **p)
 				usleep(delay);
 			}
 		}
+	}
+	if(parenteses)
+	{
+		printf("Parenteses\n");
+		return 0;
 	}
 	return 1;
 }
@@ -330,7 +343,7 @@ int resolve(double *value, PILHA_NUM **le, PILHA_CHAR **pe)
 {
 	PILHA_NUM **l;
 	PILHA_CHAR **p;
-	PILHA_CHAR *aux;
+	PILHA_CHAR *aux, *aux2;
 	char opa = '\0', operacao = '\0';
 	char pos_fixo[500];
 	pos_fixo[0] = '\0';
@@ -342,15 +355,17 @@ int resolve(double *value, PILHA_NUM **le, PILHA_CHAR **pe)
 		{
 			aux = remove_PILHA_CHAR(pe);
 			if(aux == NULL)
-				break; /* Indica que e para sair pois nao há mais operacao */
-			if(aux->c == 'n')
+			{
+				opa = ')'; /* Indica que e para sair pois nao há mais operacao */
+			}
+			else if(aux->c == 'n')
 			{
 				trade_PILHA_NUM(le, l);
 				sprintf(pos_fixo, "%s %lf", pos_fixo, ((*l)->info).d);
 				free(aux);
 				operacao = ' ';
 			}
-			else if(aux->c == '(') /* Para adicionar isso na segunda pilha. Podemos utilizar o append, mas nao e eficiente */
+			else if(aux->c == '(') /* Para adicionar isso na segunda pilha. Podemos utilizar o append, mas este e mais eficiente */
 			{
 				aux->prox = *p;
 				*p = aux;
@@ -364,29 +379,34 @@ int resolve(double *value, PILHA_NUM **le, PILHA_CHAR **pe)
 			}
 			else
 			{
-				if(prioridade(aux->c) < prioridade(get_last_PILHA_CHAR(p)))
+				if(prioridade(aux->c) < prioridade(get_last_PILHA_CHAR(p)) && get_last_PILHA_CHAR(p) != '(')
 				{
-					operacao = get_last_PILHA_CHAR(p);
-					
-					free(aux);
+					aux2 = remove_PILHA_CHAR(p);
+					operacao = aux2->c;
+					free(aux2);
 				}
 				else
 				{
-					aux->prox = *p;
-					*p = aux;
 					operacao = ' ';
 				}
+				aux->prox = *p;
+				*p = aux;
 			}
 		}
-		else /* ou opa == ')' */ /* Significa que achou um fecha pararenteses e que tem operacoes a fazer */
+		else /* ou opa == ')' */ /* Significa que achou um fecha parenteses e que tem operacoes a fazer */
 		{
 			aux = remove_PILHA_CHAR(p);
-			/* Impossivel de acontecer isso... Mas por precaucao...  E possivel de acontecer caso seja uma expressão invalida */
 			if(aux == NULL)
 			{
-				libera_PILHA_NUM(l);
-				libera_PILHA_CHAR(p);
-				return 0;
+				/* Impossivel de acontecer isso... Mas por precaucao...  E possivel de acontecer caso seja uma expressão invalida */
+				if(at_least_PILHA_NUM(l, 2) || *pe != NULL)
+				{
+					libera_PILHA_NUM(l);
+					libera_PILHA_CHAR(p);
+					return 0;
+				}
+				/* Entra aqui se estiver no final */
+				break;
 			}
 			/* aux->c nunca sera ')' */
 			if(aux->c == '(') /* Para finalizar a procura*/
@@ -395,13 +415,17 @@ int resolve(double *value, PILHA_NUM **le, PILHA_CHAR **pe)
 				operacao = ' ';
 			}
 			else
+			{
 				operacao = aux->c;
+			}
+			free(aux);
 
 		}
 		if(operacao == ' '){}
 		else if(operacao == '+')
 		{
 			operacao = soma_PILHA_NUM(l);
+			sprintf(pos_fixo, "%s %c", pos_fixo, '+');
 			if(!operacao)
 			{
 				printf("Não foi possivel somar!\n");
@@ -410,6 +434,7 @@ int resolve(double *value, PILHA_NUM **le, PILHA_CHAR **pe)
 		else if(operacao == '-')
 		{
 			operacao = sub_PILHA_NUM(l);
+			sprintf(pos_fixo, "%s %c", pos_fixo, '-');
 			if(!operacao)
 			{
 				printf("Não foi possivel subtrair!\n");
@@ -418,6 +443,7 @@ int resolve(double *value, PILHA_NUM **le, PILHA_CHAR **pe)
 		else if(operacao == '*')
 		{
 			operacao = mult_PILHA_NUM(l);
+			sprintf(pos_fixo, "%s %c", pos_fixo, '*');
 			if(!operacao)
 			{
 				printf("Não foi possivel multiplicar!\n");
@@ -426,15 +452,23 @@ int resolve(double *value, PILHA_NUM **le, PILHA_CHAR **pe)
 		else if(operacao == '/')
 		{
 			operacao = div_PILHA_NUM(l);
+			sprintf(pos_fixo, "%s %c", pos_fixo, '/');
 			if(!operacao)
 			{
 				printf("Não foi possivel dividir!\n");
 			}
 		}
 		imprime_quatro_pilhas(l, p, le, pe);
-		sleep(1);
+		sleep(2);
 	}
-	free(l);
-	free(p);
+	sprintf(pos_fixo, "%s %c", pos_fixo, '\0');
+	*value = ((*l)->info).d;
+	printf("Notacao pos-fixa:\n");
+	printf("%s\n", pos_fixo);
+	printf("\n");
+	printf("Valor final:\n");
+	printf("%lf\n", *value);
+	libera_PILHA_NUM(l);
+	libera_PILHA_CHAR(p);
 	return 1;	
 }

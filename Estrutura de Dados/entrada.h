@@ -1,3 +1,11 @@
+/* 
+	@file:			entrada.h
+	@author:		Carlos Adir Ely Murussi Leite (carlos.adir.leite@gmail.com)
+	@description:	
+
+
+*/
+
 #include <stdio.h>
 #include <string.h>
 #include <termios.h>
@@ -49,6 +57,13 @@ typedef struct
 	char k[10];
 }KEY;
 
+void buffer_clear()
+{
+	/* Essa função limpa o buffer do usuário, inclusive o que foi digitado mas ainda não enviado para análise */
+	while(kbhit())
+		getch();
+}
+
 char opcao(char *opcoes, int quantidade)
 {
 	
@@ -64,12 +79,7 @@ char opcao(char *opcoes, int quantidade)
 	}
 	return -1;
 }
-void buffer_clear()
-{
-	/* Essa função limpa o buffer do usuário, inclusive o que foi digitado mas ainda não enviado para análise */
-	while(kbhit())
-		getch();
-}
+
 char opcao2(char *opcoes, int quantidade)
 {
 	/* Requer do usuário um caracter até que ele esteja na lista de opcoes */

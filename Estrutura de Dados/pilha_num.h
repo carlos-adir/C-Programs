@@ -38,7 +38,7 @@ int append_PILHA_NUM(DATA t, PILHA_NUM **l)
 {
 	PILHA_NUM *novo;
 	if(l == NULL) /* Pilha nao foi iniciada */
-		return -1;
+		return 0;
 	novo = (PILHA_NUM *) malloc(sizeof(PILHA_NUM));
 	/* printf("Alocado elemento numerico\n"); DEBUGAR */
 	if(novo == NULL) /* Nao foi possivel alocar o elemento */
