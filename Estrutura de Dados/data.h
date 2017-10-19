@@ -1,7 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-
 struct Data
 {
 	double d;
@@ -48,4 +47,3 @@ DATA div_DATA(DATA t1, DATA t2)
 	re.d = t1.d / t2.d;
 	return re;
 }
-

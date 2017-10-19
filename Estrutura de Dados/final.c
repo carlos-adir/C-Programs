@@ -1,4 +1,16 @@
+#include <stdio.h>
+#include <stdlib.h>
 #include <time.h>
+
+#define espaco 10000
+#define delay 50*espaco
+
+void limpa_tela()
+{
+	system("clear");
+	/*printf("\n");*/
+}
+
 #include "entrada.h" 		/* Funcoes para entrada de dados, contem o necessario para os 'keys' utilizados*/
 #include "data.h"			/* Toda as operações do tipo DATA, inclui a estrutura DATA e as operacoes de soma, subtracao, divisao e multiplicacao */
 #include "pilha_num.h"		/* Toda a estrutura de dados para utilizacao de pilha, insercao, remocao, impressao etc */
@@ -44,13 +56,14 @@ int div_PILHA_NUM(PILHA_NUM **l);
 /* Programa principal e menus */
 void menu_principal()
 {
-	printf("******************************************************\n");
-	printf("*                                                    *\n");
-	printf("*                                                    *\n");
-	printf("*                                                    *\n");
-	printf("*                                                    *\n");
-	printf("*                                                    *\n");
-	printf("******************************************************\n");
+	limpa_tela();
+	printf("\n\n");
+	printf("   ███████╗ █████╗ ██╗    ███████╗██╗  ██╗██╗     █████╗ ██████╗  █████╗ ██████╗  █████╗  \n");
+	printf("   ██╔════╝██╔══██╗██║    ██╔════╝██║  ██║██║    ██╔══██╗██╔══██╗██╔══██╗██╔══██╗██╔══██╗ \n");
+	printf("   ██║     ███████║██║    ██║     ██║  ██║██║    ███████║██║  ██║██║  ██║██████╔╝███████║ \n");
+	printf("   ██║     ██╔══██║██║    ██║     ██║  ██║██║    ██╔══██║██║  ██║██║  ██║██╔══██╗██╔══██║ \n");
+	printf("   ███████╗██║  ██║██████╗███████╗███████║██████╗██║  ██║██████╔╝ █████╔╝██║  ██║██║  ██║ \n");
+	printf("   ╚══════╝╚═╝  ╚═╝╚═════╝╚══════╝╚══════╝╚═════╝╚═╝  ╚═╝╚═════╝  ╚════╝ ╚═╝  ╚═╝╚═╝  ╚═╝ \n");
 	printf("\n");
 	printf("   Digite sua opcao:\n");
 	printf("\n");
@@ -63,41 +76,20 @@ void menu_principal()
 	printf(">  ");
 }
 
-void menu_expressao()
-{	
-	system("clear");
-	printf("*****************************\n");
-	printf("* CALCULADORA DE EXPRESSOES *\n");
-	printf("*****************************\n");
-	printf("\n");
-	printf("  Digite a expressao:\n");
-	printf("\n");
-	printf("> ");
-}
-
-void menu_rpn(PILHA_NUM **l)
-{
-	system("clear");
-	printf("************************\n");
-	printf("* CALCULADORA MODO RPN *\n");
-	printf("************************\n");
-	printf("\n");
-	imprime_PILHA_NUM(l);
-	printf("\n");
-	printf("\n");
-	printf("> ");
-}
-
 void inicia_expressao()
 {
 	PILHA_NUM **l = NULL;
 	PILHA_CHAR **p = NULL;
 	char entrada[500];
 	double w;
-	/* char resposta; */
+	char resposta;
 	while(1)
 	{
 		menu_expressao();
+		printf("\n");
+		printf("  Digite a expressao:\n");
+		printf("\n");
+		printf("> ");
 		scanf("%99[^\n]", entrada);
 		while(getchar()!='\n');
 		if(!strcmp(entrada, "exit"))
@@ -133,7 +125,11 @@ void inicia_expressao()
 					printf("Invertemos a nossa entrada.\n");
 					usleep(2*delay);
 				}
-				resolve(&w, l, p);
+				resposta = resolve(&w, l, p);
+				if(!resposta)
+				{
+					printf("Entrada invalida!\n");
+				}
 			}
 			libera_PILHA_NUM(l);
 			libera_PILHA_CHAR(p);
@@ -147,13 +143,74 @@ void inicia_expressao()
 
 void instrucoes()
 {
-	printf("**************************************\n");
-	printf("*                                    *\n");
-	printf("*                                    *\n");
-	printf("*                                    *\n");
-	printf("*                                    *\n");
-	printf("*                                    *\n");
-	printf("**************************************\n");
+	int pag = 1, pagmax = 5, change = 1;
+	KEY k;
+	while(1)
+	{
+		if(change)
+		{
+			limpa_tela();
+			printf("\n\n");
+			if(pag == 1)
+			{
+
+			}
+			else if(pag == 2)
+			{
+
+			}
+			else if(pag == 3)
+			{
+				
+			}
+			else if(pag == 4)
+			{
+				
+			}
+			else if(pag == 5)
+			{
+				
+			}
+		}
+		do
+		{
+			k = get_key();
+		}while(! (key_is_equal(k, "RIGHT_KEY") || key_is_equal(k, "LEFT_KEY") || key_is_equal(k, "ESC")));
+		if(key_is_equal(k, "RIGHT_KEY"))
+		{
+			if(pag != pagmax)
+			{
+				pag += 1;
+				change = 1;
+			}
+			else
+				change = 0;
+		}
+		else if(key_is_equal(k, "LEFT_KEY"))
+		{
+			if(pag != 1)
+			{
+				pag -= 1;
+				change = 1;
+			}
+			else
+				change = 0;
+		}	
+		else if(key_is_equal(k, "ESC"))
+			break;
+	}
+}
+
+void menu_instrucoes()
+{
+	limpa_tela();
+	printf("\n\n");
+	printf("      ██╗███╗ ██╗ ██████╗████████╗██████╗ ██╗  ██╗███████╗ █████╗ ███████╗ ██████╗ \n");
+	printf("      ██║████╗██║██╔════╝╚══██╔══╝██╔══██╗██║  ██║██╔════╝██╔══██╗██╔════╝██╔════╝ \n");
+	printf("      ██║███████║ █████╗    ██║   ██████╔╝██║  ██║██║     ██║  ██║█████╗   █████╗  \n");
+	printf("      ██║██╔████║     ██╗   ██║   ██╔══██╗██║  ██║██║     ██║  ██║██╔══╝       ██╗ \n");
+	printf("      ██║██║╚███║██████╔╝   ██║   ██║  ██║╚█████╔╝███████╗ █████╔╝███████╗██████╔╝ \n");
+	printf("      ╚═╝╚═╝ ╚══╝╚═════╝    ╚═╝   ╚═╝  ╚═╝  ╚═══╝ ╚══════╝ ╚════╝ ╚══════╝╚═════╝  \n");
 }
 
 int inicia_rpn()
@@ -171,6 +228,7 @@ int inicia_rpn()
 	while(1)
 	{
 		menu_rpn(l);
+		buffer_clear();
 		scanf("%[^\n]", entrada);
 		while(getchar() != '\n');
 		if(!strcmp(entrada, "exit"))
@@ -223,7 +281,6 @@ int inicia_rpn()
 		else
 		{
 			w = atof(entrada);
-			printf("ahn?!\n");
 			resposta = append_PILHA_NUM(create_DATA(w), l);
 			if(resposta == 0)
 			{
@@ -242,7 +299,10 @@ int main()
 	while(1)
 	{
 		menu_principal();
-		k = get_key();
+		do
+		{
+			k = get_key();
+		}while(! (key_is_equal(k, "1") || key_is_equal(k, "2") || key_is_equal(k, "3") || key_is_equal(k, "4")));
 		buffer_clear();
 		if(key_is_equal(k, "1"))
 			inicia_expressao();
@@ -253,5 +313,6 @@ int main()
 		else if(key_is_equal(k, "4"))
 			break;	
 	}
+	limpa_tela();
 	return 0;
 }

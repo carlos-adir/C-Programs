@@ -1,3 +1,4 @@
+
 #define PILHA_PROF 15
 
 struct no
@@ -131,7 +132,7 @@ int imprime_PILHA_NUM(PILHA_NUM **l)
 	}
 	for(i = 0; i < PILHA_PROF; i++)
 	{
-		printf("%d: ", PILHA_PROF-i);
+		printf("  %02d: ", PILHA_PROF-i);
 		if(i > PILHA_PROF - tamanho-1)
 		{
 			imprime_DATA((*l_aux)->info);

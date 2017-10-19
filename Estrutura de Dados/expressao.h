@@ -1,6 +1,16 @@
 #include <ctype.h>
 
-#define delay 100000
+void menu_expressao()
+{	
+	limpa_tela();;
+	printf("\n\n");
+	printf("    ███████╗███╗ ███╗██████╗ ██████╗ ███████╗ ██████╗ ██████╗ █████╗ ███████╗ ██████╗ \n");
+	printf("    ██╔════╝  ████╔═╝██╔══██╗██╔══██╗██╔════╝██╔════╝██╔════╝██╔══██╗██╔════╝██╔════╝ \n");
+	printf("    █████╗     ██╔╝  ██████╔╝██████╔╝█████╗   █████╗  █████╗ ██║  ██║█████╗   █████╗  \n");
+	printf("    ██╔══╝    ████╗  ██╔═══╝ ██╔══██╗██╔══╝       ██╗     ██╗██║  ██║██╔══╝       ██╗ \n");
+	printf("    ███████╗███╔═███╗██║     ██║  ██║███████╗██████╔╝██████╔╝ █████╔╝███████╗██████╔╝ \n");
+	printf("    ╚══════╝╚══╝ ╚══╝╚═╝     ╚═╝  ╚═╝╚══════╝╚═════╝ ╚═════╝  ╚════╝ ╚══════╝╚═════╝  \n");
+}
 
 char simbolo(char c)
 {
@@ -106,15 +116,11 @@ int imprime_ambas_pilhas(PILHA_NUM **l, PILHA_CHAR **p)
 		if(tamanho_p == PILHA_PROF)
 			break;
 	}
-	system("clear");
-	printf("*****************************\n");
-	printf("* CALCULADORA DE EXPRESSOES *\n");
-	printf("*****************************\n");
-	printf("\n");
+	menu_expressao();
 	printf("    PILHA_NUM\tPILHA_CHAR\n\n");
 	for(i = 0; i < PILHA_PROF; i++) /* Aqui imprime a lista ja colocando os elementos de volta na pilha original */
 	{
-		printf("%02d: ", PILHA_PROF-i);
+		printf("  %02d: ", PILHA_PROF-i);
 		if(i > PILHA_PROF - tamanho_l - 1)
 		{
 			imprime_DATA((*l_aux)->info);
@@ -193,49 +199,46 @@ int imprime_quatro_pilhas(PILHA_NUM **l, PILHA_CHAR **p, PILHA_NUM **le, PILHA_C
 		if(tamanho_pe == PILHA_PROF)
 			break;
 	}
-	
-	printf("*****************************\n");
-	printf("* CALCULADORA DE EXPRESSOES *\n");
-	printf("*****************************\n");
-	printf("\n");
+	menu_expressao();
 	printf("            ENTRADA                               RPN\n");
 	printf("    PILHA_NUM      PILHA_CHAR           PILHA_NUM      PILHA_CHAR\n\n");
 	for(i = 0; i < PILHA_PROF; i++) /* Aqui imprime a lista ja colocando os elementos de volta na pilha original */
 	{
-		printf("%02d: ", PILHA_PROF-i);
+		printf("  %02d: ", PILHA_PROF-i);
 		if(i > PILHA_PROF - tamanho_le - 1)
 		{
 			imprime_DATA((*le_aux)->info);
 			trade_PILHA_NUM(le_aux, le);
 		}
 		else
-			putchar('\t');
-		putchar('\t');
+		{
+			printf("\t");
+		}
+		printf("\t");
+		printf("\t");
 		if(i > PILHA_PROF - tamanho_pe - 1)
 		{
 			putchar((*pe_aux)->c);
 			trade_PILHA_CHAR(pe_aux, pe);
 		}
-		else
-			putchar('\t');
-		putchar('\t');
-		putchar('\t');
+		printf("\t");
+		printf("\t");
 		if(i > PILHA_PROF - tamanho_l - 1)
 		{
 			imprime_DATA((*l_aux)->info);
 			trade_PILHA_NUM(l_aux, l);
 		}
 		else
-			putchar('\t');
-		putchar('\t');
+		{
+			printf("\t");
+		}
+		printf("\t");
 		if(i > PILHA_PROF - tamanho_p - 1)
 		{
 			putchar((*p_aux)->c);
 			trade_PILHA_CHAR(p_aux, p);
 		}
-		else
-			putchar('\t');
-		putchar('\n');
+		printf("\n");
 	}
 	free(p_aux);
 	free(l_aux);
@@ -304,7 +307,8 @@ int trata_expressao(char *str, PILHA_NUM **l, PILHA_CHAR **p)
 	}
 	if(parenteses)
 	{
-		printf("Parenteses\n");
+		printf("Expressão inválida! Faltam parenteses\n");
+		sleep(2);
 		return 0;
 	}
 	return 1;
@@ -392,6 +396,11 @@ int resolve(double *value, PILHA_NUM **le, PILHA_CHAR **pe)
 				aux->prox = *p;
 				*p = aux;
 			}
+			if(delay != 0)
+			{
+				imprime_quatro_pilhas(l, p, le, pe);
+				usleep(delay);
+			}
 		}
 		else /* ou opa == ')' */ /* Significa que achou um fecha parenteses e que tem operacoes a fazer */
 		{
@@ -399,7 +408,7 @@ int resolve(double *value, PILHA_NUM **le, PILHA_CHAR **pe)
 			if(aux == NULL)
 			{
 				/* Impossivel de acontecer isso... Mas por precaucao...  E possivel de acontecer caso seja uma expressão invalida */
-				if(at_least_PILHA_NUM(l, 2) || *pe != NULL)
+				if(at_least_PILHA_NUM(l, 2) || *pe != NULL || *le != NULL)
 				{
 					libera_PILHA_NUM(l);
 					libera_PILHA_CHAR(p);
@@ -422,45 +431,43 @@ int resolve(double *value, PILHA_NUM **le, PILHA_CHAR **pe)
 
 		}
 		if(operacao == ' '){}
-		else if(operacao == '+')
-		{
-			operacao = soma_PILHA_NUM(l);
-			sprintf(pos_fixo, "%s %c", pos_fixo, '+');
+		else{
+			if(operacao == '+')
+			{
+				operacao = soma_PILHA_NUM(l);
+				sprintf(pos_fixo, "%s %c", pos_fixo, '+');	
+			}
+			else if(operacao == '-')
+			{
+				operacao = sub_PILHA_NUM(l);
+				sprintf(pos_fixo, "%s %c", pos_fixo, '-');
+			}
+			else if(operacao == '*')
+			{
+				operacao = mult_PILHA_NUM(l);
+				sprintf(pos_fixo, "%s %c", pos_fixo, '*');
+			}
+			else if(operacao == '/')
+			{
+				operacao = div_PILHA_NUM(l);
+				sprintf(pos_fixo, "%s %c", pos_fixo, '/');
+			}
 			if(!operacao)
 			{
-				printf("Não foi possivel somar!\n");
+				libera_PILHA_NUM(l);
+				libera_PILHA_CHAR(p);
+				return 0;
 			}
-		}
-		else if(operacao == '-')
-		{
-			operacao = sub_PILHA_NUM(l);
-			sprintf(pos_fixo, "%s %c", pos_fixo, '-');
-			if(!operacao)
+			if(delay != 0)
 			{
-				printf("Não foi possivel subtrair!\n");
+				imprime_quatro_pilhas(l, p, le, pe);
+				usleep(delay);
 			}
 		}
-		else if(operacao == '*')
-		{
-			operacao = mult_PILHA_NUM(l);
-			sprintf(pos_fixo, "%s %c", pos_fixo, '*');
-			if(!operacao)
-			{
-				printf("Não foi possivel multiplicar!\n");
-			}
-		}
-		else if(operacao == '/')
-		{
-			operacao = div_PILHA_NUM(l);
-			sprintf(pos_fixo, "%s %c", pos_fixo, '/');
-			if(!operacao)
-			{
-				printf("Não foi possivel dividir!\n");
-			}
-		}
-		imprime_quatro_pilhas(l, p, le, pe);
-		sleep(2);
+		
 	}
+	limpa_tela();;
+	imprime_quatro_pilhas(l, p, le, pe);
 	sprintf(pos_fixo, "%s %c", pos_fixo, '\0');
 	*value = ((*l)->info).d;
 	printf("Notacao pos-fixa:\n");
