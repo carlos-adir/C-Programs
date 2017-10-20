@@ -70,7 +70,6 @@ void menu_principal()
 	printf("   1) Calculadora de Expressoes\n");
 	printf("   2) Calculadora modo RPN\n");
 	printf("   3) Instrucoes\n");
-	printf("   4) Sair\n");
 	printf("\n");
 	printf("\n");
 	printf(">  ");
@@ -141,6 +140,17 @@ void inicia_expressao()
 	}
 }
 
+void menu_instrucoes()
+{
+	limpa_tela();
+	printf("\n\n");
+	printf("      ██╗███╗ ██╗ ██████╗████████╗██████╗ ██╗  ██╗███████╗ █████╗ ███████╗ ██████╗ \n");
+	printf("      ██║████╗██║██╔════╝╚══██╔══╝██╔══██╗██║  ██║██╔════╝██╔══██╗██╔════╝██╔════╝ \n");
+	printf("      ██║███████║ █████╗    ██║   ██████╔╝██║  ██║██║     ██║  ██║█████╗   █████╗  \n");
+	printf("      ██║██╔████║     ██╗   ██║   ██╔══██╗██║  ██║██║     ██║  ██║██╔══╝       ██╗ \n");
+	printf("      ██║██║╚███║██████╔╝   ██║   ██║  ██║╚█████╔╝███████╗ █████╔╝███████╗██████╔╝ \n");
+	printf("      ╚═╝╚═╝ ╚══╝╚═════╝    ╚═╝   ╚═╝  ╚═╝  ╚═══╝ ╚══════╝ ╚════╝ ╚══════╝╚═════╝  \n");
+}
 void instrucoes()
 {
 	int pag = 1, pagmax = 5, change = 1;
@@ -149,27 +159,157 @@ void instrucoes()
 	{
 		if(change)
 		{
-			limpa_tela();
+			menu_instrucoes();
 			printf("\n\n");
 			if(pag == 1)
 			{
-
+				printf("\t ________________________________________________________________________ \n");
+				printf("\t|                                                                        |\n");
+				printf("\t| Ola, voce esta nas instrucoes. Na utilizacao dessa parte, e necessario |\n");
+				printf("\t| algumas informacoes de como navegar neste menu. As unicas teclas que   |\n");
+				printf("\t| funcionam sao as:                                                      |\n");
+				printf("\t|                                                                        |\n");
+				printf("\t|       ESC) Caso voce queira sair e voltar ao menu principal            |\n");
+				printf("\t|  LEFT_KEY) Caso voce queira voltar uma pagina                          |\n");
+				printf("\t| RIGHT_KEY) Caso voce queira voltar uma pagina                          |\n");
+				printf("\t|                                                                        |\n");
+				printf("\t| Assim como aqui, no menu principal a tecla ESC faz o usuario sair do   |\n");
+				printf("\t| programa.                                                              |\n");
+				printf("\t|                                                                        |\n");
+				printf("\t| Utilize a seta para a direita para ir para a proxima instrucao.        |\n");
+				printf("\t|                                                                        |\n");
+				printf("\t|                                                                        |\n");
+				printf("\t|                                                                        |\n");
+				printf("\t|                                                                        |\n");
+				printf("\t|                                                                        |\n");
+				printf("\t|                                                                        |\n");
+				printf("\t|                                                                        |\n");
+				printf("\t|                                                                        |\n");
+				printf("\t|                                                                        |\n");
+				printf("\t|                                                                        |\n");
+				printf("\t|________________________________________________________________________|\n");
+				printf("\n");
+				printf("\t                                    1/5                 Proxima pagina -->\n");	
 			}
 			else if(pag == 2)
 			{
-
+				printf("\t ________________________________________________________________________ \n");
+				printf("\t|                                                                        |\n");
+				printf("\t| Quando se executa o programa, aparece uma tela indicando a calculadora |\n");
+				printf("\t| e suas opcoes. Para sair deste modo, aperte ESC.                       |\n");
+				printf("\t|                                                                        |\n");
+				printf("\t| Os botoes validos para quando se esta no menu principal sao:           |\n");
+				printf("\t|                                                                        |\n");
+				printf("\t| 1) Acessa a calculadora de expressao, em que voce entra com uma expres-|\n");
+				printf("\t|    como por exemplo (3+2*2)*5-7 e entao seu valor e calculado. Mais de-|\n");
+				printf("\t|    talhes sao explicados na proxima pagina.                            |\n");
+				printf("\t| 2) Acessa a calculadora no modo RPN, em que voce entra com numeros e as|\n");
+				printf("\t|    opcoes de soma, subtracao, multiplicacao e divisao sao validas. Mais|\n");
+				printf("\t|    detalhes sao explicados daqui a duas paginas                        |\n");
+				printf("\t| 3) Menu instrucoes, a maneira com que voce chegou nessa parte foi atra-|\n");
+				printf("\t|    ves disso. Nao sera explicado mais para frente.                     |\n");
+				printf("\t|                                                                        |\n");
+				printf("\t|                                                                        |\n");
+				printf("\t|                                                                        |\n");
+				printf("\t|                                                                        |\n");
+				printf("\t|                                                                        |\n");
+				printf("\t|                                                                        |\n");
+				printf("\t|                                                                        |\n");
+				printf("\t|                                                                        |\n");
+				printf("\t|                                                                        |\n");
+				printf("\t|________________________________________________________________________|\n");
+				printf("\n");
+				printf("\t<-- Pagina anterior                2/5                 Proxima pagina -->\n");
 			}
 			else if(pag == 3)
 			{
-				
+				printf("\t ________________________________________________________________________ \n");
+				printf("\t|                                                                        |\n");
+				printf("\t| Aqui sao mostradas as instrucoes para quando voce acessa a calculadora |\n");
+				printf("\t| de expressoes. Primeiro, para sair desse modo, basta digitar a frase   |\n");
+				printf("\t| \"exit\" sem as aspas e apertar ENTER.                                   |\n");
+				printf("\t|                                                                        |\n");
+				printf("\t| Neste voce digita uma expressao como por exemplo (3+2*2)*5-7 cujo valor|\n");
+				printf("\t| e dado por 28. Este e um exemplo de entrada valida, e o valor calcula- |\n");
+				printf("\t| do sendo mostrado a utilizacao de pilhas.                              |\n");
+				printf("\t|                                                                        |\n");
+				printf("\t|            ENTRADA VALIDA:  (3+2*2)*5-7                                |\n");
+				printf("\t|                             3*(4-7*2/(4+3))-9*4                        |\n");
+				printf("\t|                                                                        |\n");
+				printf("\t| cujos valores sao 28 e -30, respectivamente. Abaixo tem exemplo de duas|\n");
+				printf("\t| entradas invalidas, sendo a primeira invalida por falta de parenteses  |\n");
+				printf("\t| e a segunda invalida pois a quantidade de operandos e insuficiente.    |\n");
+				printf("\t|                                                                        |\n");
+				printf("\t|          ENTRADA INVALIDA: 3*(4-7*2/(4+3)-9*4                          |\n");
+				printf("\t|                            3*(4-7*2/(4+3))-9*                          |\n");
+				printf("\t|                                                                        |\n");
+				printf("\t| Neste modo, sao utilizados duas pilhas numericas e duas pilhas de char |\n");
+				printf("\t| Como a maneira utilizada e didatica, foi estipulado um tempo entre uma |\n");
+				printf("\t| execucao e outra. Para isso, mude os valores de delay e wait dentro do |\n");
+				printf("\t| arquivo \"final.c\" para variar esse tempo.                              |\n");
+				printf("\t|________________________________________________________________________|\n");
+				printf("\n");
+				printf("\t<-- Pagina anterior                3/5                 Proxima pagina -->\n");
 			}
 			else if(pag == 4)
 			{
-				
+				printf("\t ________________________________________________________________________ \n");
+				printf("\t|                                                                        |\n");
+				printf("\t| Aqui sao mostradas as instrucoes para quando voce acessa a calculadora |\n");
+				printf("\t| de expressoes. Primeiro, para sair desse modo, basta digitar a frase   |\n");
+				printf("\t| \"exit\" sem as aspas e apertar ENTER.                                   |\n");
+				printf("\t|                                                                        |\n");
+				printf("\t| Neste voce digita uma expressao como por exemplo (3+2*2)*5-7 cujo valor|\n");
+				printf("\t| e dado por 28. Este e um exemplo de entrada valida, e o valor calcula- |\n");
+				printf("\t| do sendo mostrado a utilizacao de pilhas.                              |\n");
+				printf("\t|                                                                        |\n");
+				printf("\t|            ENTRADA VALIDA:  (3+2*2)*5-7                                |\n");
+				printf("\t|                             3*(4-7*2/(4+3))-9*4                        |\n");
+				printf("\t|                                                                        |\n");
+				printf("\t| cujos valores sao 28 e -30, respectivamente. Abaixo tem exemplo de duas|\n");
+				printf("\t| entradas invalidas, sendo a primeira invalida por falta de parenteses  |\n");
+				printf("\t| e a segunda invalida pois a quantidade de operandos e insuficiente.    |\n");
+				printf("\t|                                                                        |\n");
+				printf("\t|          ENTRADA INVALIDA: 3*(4-7*2/(4+3)-9*4                          |\n");
+				printf("\t|                            3*(4-7*2/(4+3))-9*                          |\n");
+				printf("\t|                                                                        |\n");
+				printf("\t| Neste modo, sao utilizados duas pilhas numericas e duas pilhas de char |\n");
+				printf("\t| Como a maneira utilizada e didatica, foi estipulado um tempo entre uma |\n");
+				printf("\t| execucao e outra. Para isso, mude os valores de delay e wait dentro do |\n");
+				printf("\t| arquivo \"final.c\" para variar esse tempo.                              |\n");
+				printf("\t|________________________________________________________________________|\n");
+				printf("\n");
+				printf("\t<-- Pagina anterior                4/5                 Proxima pagina -->\n");
 			}
 			else if(pag == 5)
 			{
-				
+				printf("\t ________________________________________________________________________ \n");
+				printf("\t|                                                                        |\n");
+				printf("\t| Aqui sao mostradas as instrucoes para quando voce acessa a calculadora |\n");
+				printf("\t| de expressoes. Primeiro, para sair desse modo, basta digitar a frase   |\n");
+				printf("\t| \"exit\" sem as aspas e apertar ENTER.                                   |\n");
+				printf("\t|                                                                        |\n");
+				printf("\t| Neste voce digita uma expressao como por exemplo (3+2*2)*5-7 cujo valor|\n");
+				printf("\t| e dado por 28. Este e um exemplo de entrada valida, e o valor calcula- |\n");
+				printf("\t| do sendo mostrado a utilizacao de pilhas.                              |\n");
+				printf("\t|                                                                        |\n");
+				printf("\t|            ENTRADA VALIDA:  (3+2*2)*5-7                                |\n");
+				printf("\t|                             3*(4-7*2/(4+3))-9*4                        |\n");
+				printf("\t|                                                                        |\n");
+				printf("\t| cujos valores sao 28 e -30, respectivamente. Abaixo tem exemplo de duas|\n");
+				printf("\t| entradas invalidas, sendo a primeira invalida por falta de parenteses  |\n");
+				printf("\t| e a segunda invalida pois a quantidade de operandos e insuficiente.    |\n");
+				printf("\t|                                                                        |\n");
+				printf("\t|          ENTRADA INVALIDA: 3*(4-7*2/(4+3)-9*4                          |\n");
+				printf("\t|                            3*(4-7*2/(4+3))-9*                          |\n");
+				printf("\t|                                                                        |\n");
+				printf("\t| Neste modo, sao utilizados duas pilhas numericas e duas pilhas de char |\n");
+				printf("\t| Como a maneira utilizada e didatica, foi estipulado um tempo entre uma |\n");
+				printf("\t| execucao e outra. Para isso, mude os valores de delay e wait dentro do |\n");
+				printf("\t| arquivo \"final.c\" para variar esse tempo.                              |\n");
+				printf("\t|________________________________________________________________________|\n");
+				printf("\n");
+				printf("\t<-- Pagina anterior                5/5                                   \n");
 			}
 		}
 		do
@@ -201,17 +341,6 @@ void instrucoes()
 	}
 }
 
-void menu_instrucoes()
-{
-	limpa_tela();
-	printf("\n\n");
-	printf("      ██╗███╗ ██╗ ██████╗████████╗██████╗ ██╗  ██╗███████╗ █████╗ ███████╗ ██████╗ \n");
-	printf("      ██║████╗██║██╔════╝╚══██╔══╝██╔══██╗██║  ██║██╔════╝██╔══██╗██╔════╝██╔════╝ \n");
-	printf("      ██║███████║ █████╗    ██║   ██████╔╝██║  ██║██║     ██║  ██║█████╗   █████╗  \n");
-	printf("      ██║██╔████║     ██╗   ██║   ██╔══██╗██║  ██║██║     ██║  ██║██╔══╝       ██╗ \n");
-	printf("      ██║██║╚███║██████╔╝   ██║   ██║  ██║╚█████╔╝███████╗ █████╔╝███████╗██████╔╝ \n");
-	printf("      ╚═╝╚═╝ ╚══╝╚═════╝    ╚═╝   ╚═╝  ╚═╝  ╚═══╝ ╚══════╝ ╚════╝ ╚══════╝╚═════╝  \n");
-}
 
 int inicia_rpn()
 {
@@ -302,7 +431,7 @@ int main()
 		do
 		{
 			k = get_key();
-		}while(! (key_is_equal(k, "1") || key_is_equal(k, "2") || key_is_equal(k, "3") || key_is_equal(k, "4")));
+		}while(! (key_is_equal(k, "1") || key_is_equal(k, "2") || key_is_equal(k, "3") || key_is_equal(k, "ESC")));
 		buffer_clear();
 		if(key_is_equal(k, "1"))
 			inicia_expressao();
@@ -310,7 +439,7 @@ int main()
 			printf("%d\n", inicia_rpn());
 		else if(key_is_equal(k, "3"))
 			instrucoes();
-		else if(key_is_equal(k, "4"))
+		else if(key_is_equal(k, "ESC"))
 			break;	
 	}
 	limpa_tela();
