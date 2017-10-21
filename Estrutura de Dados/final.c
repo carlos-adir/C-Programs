@@ -5,6 +5,7 @@
 #define espaco 10000
 #define delay 50*espaco
 
+void usleep(unsigned int t);
 void limpa_tela()
 {
 	system("clear");
@@ -12,13 +13,14 @@ void limpa_tela()
 }
 
 #include "entrada.h" 		/* Funcoes para entrada de dados, contem o necessario para os 'keys' utilizados*/
-#include "data.h"			/* Toda as operações do tipo DATA, inclui a estrutura DATA e as operacoes de soma, subtracao, divisao e multiplicacao */
+#include "data.h"			/* Toda as operacoes do tipo DATA, inclui a estrutura DATA e as operacoes de soma, subtracao, divisao e multiplicacao */
 #include "pilha_num.h"		/* Toda a estrutura de dados para utilizacao de pilha, insercao, remocao, impressao etc */
 #include "rpn.h"			/* As operacoes de uma calculadora RPN */
 #include "pilha_char.h"		/* Uma pilha de caracteres */
 #include "expressao.h"		/* Contem as funcoes necessarias para a parte de expressoes */
 
 #define wait 2
+
 
 /* Informacoes utilizadas do header "entrada_dados.h" */
 void buffer_clear();
@@ -48,10 +50,33 @@ int imprime_PILHA_NUM(PILHA_NUM **l);
 
 
 /* Informacoes uteis do header "rpn.h" */
+void menu_rpn(PILHA_NUM **l);
 int soma_PILHA_NUM(PILHA_NUM **l);
 int sub_PILHA_NUM(PILHA_NUM **l);
 int mult_PILHA_NUM(PILHA_NUM **l);
 int div_PILHA_NUM(PILHA_NUM **l);
+
+
+/* Informacoes uteis do header "pilha_char.h" */
+struct PILHA_CHAR;
+PILHA_CHAR ** create_PILHA_CHAR();
+char vazia_PILHA_CHAR(PILHA_CHAR **p);
+int append_PILHA_CHAR(char c, PILHA_CHAR **p);
+PILHA_CHAR *remove_PILHA_CHAR(PILHA_CHAR **p);
+char get_last_PILHA_CHAR(PILHA_CHAR **p);
+int libera_PILHA_CHAR(PILHA_CHAR **p);
+int trade_PILHA_CHAR(PILHA_CHAR **p, PILHA_CHAR **p_aux);
+
+/* Informacoes uteis do header "expressao.h" */
+void menu_expressao();
+int pilhas_ja_criadas(PILHA_NUM **l, PILHA_CHAR **p);
+int possivel_criar_pilhas(PILHA_NUM ***l, PILHA_CHAR ***p);
+int imprime_ambas_pilhas(PILHA_NUM **l, PILHA_CHAR **p);
+int imprime_quatro_pilhas(PILHA_NUM **l, PILHA_CHAR **p, PILHA_NUM **le, PILHA_CHAR **pe);
+int trata_expressao(char *str, PILHA_NUM **l, PILHA_CHAR **p);
+int inverte_pilha(PILHA_NUM ***l, PILHA_CHAR ***p);
+int resolve(double *value, PILHA_NUM **le, PILHA_CHAR **pe);
+
 
 /* Programa principal e menus */
 void menu_principal()
@@ -114,7 +139,7 @@ void inicia_expressao()
 				if(delay != 0)
 				{
 					imprime_ambas_pilhas(l, p);
-					printf("Temos agora nossa entrada é mostrada acima.\n");
+					printf("Temos agora nossa entrada e mostrada acima.\n");
 					usleep(2*delay);
 				}
 				inverte_pilha(&l, &p); /* Invertemos pois queremos os primeiros numeros no topo da lista */
@@ -171,7 +196,7 @@ void instrucoes()
 				printf("\t|                                                                        |\n");
 				printf("\t|       ESC) Caso voce queira sair e voltar ao menu principal            |\n");
 				printf("\t|  LEFT_KEY) Caso voce queira voltar uma pagina                          |\n");
-				printf("\t| RIGHT_KEY) Caso voce queira voltar uma pagina                          |\n");
+				printf("\t| RIGHT_KEY) Caso voce queira avançar uma pagina                         |\n");
 				printf("\t|                                                                        |\n");
 				printf("\t| Assim como aqui, no menu principal a tecla ESC faz o usuario sair do   |\n");
 				printf("\t| programa.                                                              |\n");
@@ -219,7 +244,7 @@ void instrucoes()
 				printf("\t|                                                                        |\n");
 				printf("\t|________________________________________________________________________|\n");
 				printf("\n");
-				printf("\t<-- Pagina anterior                2/5                 Proxima pagina -->\n");
+				printf("\t<-- Pagina anterior                 2/5                 Proxima pagina -->\n");
 			}
 			else if(pag == 3)
 			{
@@ -249,67 +274,67 @@ void instrucoes()
 				printf("\t| arquivo \"final.c\" para variar esse tempo.                              |\n");
 				printf("\t|________________________________________________________________________|\n");
 				printf("\n");
-				printf("\t<-- Pagina anterior                3/5                 Proxima pagina -->\n");
+				printf("\t<-- Pagina anterior                 3/5                 Proxima pagina -->\n");
 			}
 			else if(pag == 4)
 			{
 				printf("\t ________________________________________________________________________ \n");
 				printf("\t|                                                                        |\n");
 				printf("\t| Aqui sao mostradas as instrucoes para quando voce acessa a calculadora |\n");
-				printf("\t| de expressoes. Primeiro, para sair desse modo, basta digitar a frase   |\n");
-				printf("\t| \"exit\" sem as aspas e apertar ENTER.                                   |\n");
+				printf("\t| no modo RPN. Este modo e muito utilizado por calculadoras pois precisa |\n");
+				printf("\t| de de menor quantidade de termos a serem digitados pois nao e necessa- |\n");
+				printf("\t| rio abrir ou fechar parentes. Contudo, ate esse metodo ser aprendido,  |\n");
+				printf("\t| demora-se um pouco de tempo.                                           |\n");
 				printf("\t|                                                                        |\n");
-				printf("\t| Neste voce digita uma expressao como por exemplo (3+2*2)*5-7 cujo valor|\n");
-				printf("\t| e dado por 28. Este e um exemplo de entrada valida, e o valor calcula- |\n");
-				printf("\t| do sendo mostrado a utilizacao de pilhas.                              |\n");
+				printf("\t| Neste modo, voce faz as operacoes sempre com os dois elementos mostra- |\n");
+				printf("\t| dos na pilha pelas posicoes 1 e 2. Por exemplo, digite o numero 3, te- |\n");
+				printf("\t| cle ENTER, depois o numero 2, ENTER e depois o simbolo de menos('-').  |\n");
+				printf("\t| Neste caso, teremos que o numero 1 sera mostrado na posicao 1 e os nu- |\n");
+				printf("\t| meros 3 e 2 digitados somem.                                           |\n");
 				printf("\t|                                                                        |\n");
-				printf("\t|            ENTRADA VALIDA:  (3+2*2)*5-7                                |\n");
-				printf("\t|                             3*(4-7*2/(4+3))-9*4                        |\n");
+				printf("\t| Da mesma maneira, tem-se as operacoes de +, -, * e /. Teste alguns nu- |\n");
+				printf("\t| meros e suas operacoes. Voce vera que ao tentar dividir por zero, nao  |\n");
+				printf("\t| conseguira e sera informado uma mensagem de erro. Caso o usuario tente |\n");
+				printf("\t| fazer uma operacao e nao tenha a quantidade de elementos, o programa   |\n");
+				printf("\t| informara ao usuario a impossibilidade da operacao.                    |\n");
 				printf("\t|                                                                        |\n");
-				printf("\t| cujos valores sao 28 e -30, respectivamente. Abaixo tem exemplo de duas|\n");
-				printf("\t| entradas invalidas, sendo a primeira invalida por falta de parenteses  |\n");
-				printf("\t| e a segunda invalida pois a quantidade de operandos e insuficiente.    |\n");
-				printf("\t|                                                                        |\n");
-				printf("\t|          ENTRADA INVALIDA: 3*(4-7*2/(4+3)-9*4                          |\n");
-				printf("\t|                            3*(4-7*2/(4+3))-9*                          |\n");
-				printf("\t|                                                                        |\n");
-				printf("\t| Neste modo, sao utilizados duas pilhas numericas e duas pilhas de char |\n");
-				printf("\t| Como a maneira utilizada e didatica, foi estipulado um tempo entre uma |\n");
-				printf("\t| execucao e outra. Para isso, mude os valores de delay e wait dentro do |\n");
-				printf("\t| arquivo \"final.c\" para variar esse tempo.                              |\n");
+				printf("\t| Vale lembrar que embora mostre apenas 15 numeros, caso seja digitados  |\n");
+				printf("\t| mais de 15, ainda continuarao disponíveis ao usuario.                  |\n");
+				printf("\t| Dica: Digite 2, depois ENTER algumas vezes. Dessa maneira e possivel   |\n");
+				printf("\t| repetir a ultima entrada. O mesmo vale para operacoes                  |\n");
 				printf("\t|________________________________________________________________________|\n");
 				printf("\n");
-				printf("\t<-- Pagina anterior                4/5                 Proxima pagina -->\n");
+				printf("\t<-- Pagina anterior                 4/5                 Proxima pagina -->\n");
 			}
 			else if(pag == 5)
 			{
 				printf("\t ________________________________________________________________________ \n");
 				printf("\t|                                                                        |\n");
-				printf("\t| Aqui sao mostradas as instrucoes para quando voce acessa a calculadora |\n");
-				printf("\t| de expressoes. Primeiro, para sair desse modo, basta digitar a frase   |\n");
-				printf("\t| \"exit\" sem as aspas e apertar ENTER.                                   |\n");
+				printf("\t|                                  CONTATO                               |\n");
 				printf("\t|                                                                        |\n");
-				printf("\t| Neste voce digita uma expressao como por exemplo (3+2*2)*5-7 cujo valor|\n");
-				printf("\t| e dado por 28. Este e um exemplo de entrada valida, e o valor calcula- |\n");
-				printf("\t| do sendo mostrado a utilizacao de pilhas.                              |\n");
+				printf("\t|    AUTOR: Carlos Adir Ely                                              |\n");
 				printf("\t|                                                                        |\n");
-				printf("\t|            ENTRADA VALIDA:  (3+2*2)*5-7                                |\n");
-				printf("\t|                             3*(4-7*2/(4+3))-9*4                        |\n");
+				printf("\t|    EMAIL: carlos.adir.leite@gmail.com                                  |\n");
 				printf("\t|                                                                        |\n");
-				printf("\t| cujos valores sao 28 e -30, respectivamente. Abaixo tem exemplo de duas|\n");
-				printf("\t| entradas invalidas, sendo a primeira invalida por falta de parenteses  |\n");
-				printf("\t| e a segunda invalida pois a quantidade de operandos e insuficiente.    |\n");
+				printf("\t|     LINK: github.com/CarlosAdir/C-Programs/tree/master/                |\n");
+				printf("\t|                      Estrutura%%20de%%20Dados                            |\n");
 				printf("\t|                                                                        |\n");
-				printf("\t|          ENTRADA INVALIDA: 3*(4-7*2/(4+3)-9*4                          |\n");
-				printf("\t|                            3*(4-7*2/(4+3))-9*                          |\n");
 				printf("\t|                                                                        |\n");
-				printf("\t| Neste modo, sao utilizados duas pilhas numericas e duas pilhas de char |\n");
-				printf("\t| Como a maneira utilizada e didatica, foi estipulado um tempo entre uma |\n");
-				printf("\t| execucao e outra. Para isso, mude os valores de delay e wait dentro do |\n");
-				printf("\t| arquivo \"final.c\" para variar esse tempo.                              |\n");
+				printf("\t|                                                                        |\n");
+				printf("\t|    Duvidas, sugestoes ou criticas, contate o autor deste.              |\n");
+				printf("\t|                                                                        |\n");
+				printf("\t|                                                                        |\n");
+				printf("\t|                                                                        |\n");
+				printf("\t|                                                                        |\n");
+				printf("\t|                                                                        |\n");
+				printf("\t|                                                                        |\n");
+				printf("\t|                                                                        |\n");
+				printf("\t|                                                                        |\n");
+				printf("\t|                                                                        |\n");
+				printf("\t|                                                                        |\n");
 				printf("\t|________________________________________________________________________|\n");
 				printf("\n");
-				printf("\t<-- Pagina anterior                5/5                                   \n");
+				printf("\t<-- Pagina anterior                 5/5                                   \n");
 			}
 		}
 		do
@@ -410,11 +435,15 @@ int inicia_rpn()
 		else
 		{
 			w = atof(entrada);
-			resposta = append_PILHA_NUM(create_DATA(w), l);
-			if(resposta == 0)
+			if(w == 0 && entrada[0]){}
+			else
 			{
-				printf("Nao e possivel adicionar outro elemento na pilha!\n");
-				sleep(wait);
+				resposta = append_PILHA_NUM(create_DATA(w), l);
+				if(resposta == 0)
+				{
+					printf("Nao e possivel adicionar outro elemento na pilha!\n");
+					sleep(wait);
+				}
 			}
 		}
 	}

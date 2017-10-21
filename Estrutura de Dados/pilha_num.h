@@ -17,23 +17,6 @@ PILHA_NUM ** create_PILHA_NUM()
 		*l = NULL;
 	return l;
 }
-/* Retorna a quantidade de elementos da pilha */
-/* int size_PILHA_NUM(PILHA_NUM **l) 
-{
-	PILHA_NUM *aux;
-	int size = 0;
-	if(l == NULL)
-		return -1;
-	aux = *l;
-	while(aux != NULL)
-	{
-		size += 1;
-		aux = aux->prox;
-	}
-	return size;
-}*/
-
-
 
 int append_PILHA_NUM(DATA t, PILHA_NUM **l)
 {
@@ -143,40 +126,3 @@ int imprime_PILHA_NUM(PILHA_NUM **l)
 	libera_PILHA_NUM(l_aux);
 	return 1;
 }
-
-/*
-void open_all_PILHA_NUM(PILHA_NUM **l)
-{
-	int i, tamanho, profundidade=0;
-	KEY k;
-	while(1)
-	{
-		system("clear");
-		printf("******************\n");
-		printf("* PILHA NUMERICA *\n");
-		printf("******************\n");
-		for(i = 0; i < max; i++)
-		{
-			printf("%d: ", profundidade + max-i);
-			aux = begin;
-			for(j = 0; j < max-i-1; j++)
-				aux = aux->prox;
-			imprime_DATA(aux->info);
-			printf("\n");
-		}
-		printf("\n\nAperte as teclas direcionaisou ESC para sair...");
-		k = get_key();
-		if(key_is_equal(k, "UP_KEY"))
-		{
-			if(profundidade+max < tamanho)
-				profundidade += 1;
-		}
-		else if(key_is_equal(k, "DOWN_KEY"))
-		{
-			if(profundidade > 0)
-				profundidade -= 1;
-		}
-		else if(key_is_equal(k, "ESC"))
-			break;
-	}
-}*/
