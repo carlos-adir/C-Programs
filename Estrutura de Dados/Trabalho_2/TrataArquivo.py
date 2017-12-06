@@ -1,3 +1,8 @@
+# Carlos Adir Ely Murussi Leite
+# 150121059
+
+import sys
+
 
 def existe_arquivo(nome):
 	try:
@@ -46,23 +51,47 @@ class info():
 		self.add_infos(lista)
 	def add_infos(self, lista):
 		#if(type())
-		self.turma.append(lista[2])
-		self.year.append(lista[3])
-		self.peri.append(lista[4])
-		self.size.append(lista[5])
-		self.postura.append((lista[6], lista[7]))
-		self.atuacao.append((lista[8], lista[9]))
-		self.autoavaliacao.append((lista[10], lista[11]))
+		if 1900 < lista[3] < 2100:
+			if lista[4] > 0:
+				if lista[5] >= 0:
+					if 0 <= lista[6] <= 10 and 0 <= lista[8] <= 10 and 0 <= lista[10] <= 10:
+						if 0 <= lista[7] <= 10 and 0 <= lista[9] <= 10 and 0 <= lista[11] <= 10:
+							self.turma.append(lista[2])
+							self.year.append(lista[3])
+							self.peri.append(lista[4])
+							self.size.append(lista[5])
+							self.postura.append((lista[6], lista[7]))
+							self.atuacao.append((lista[8], lista[9]))
+							self.autoavaliacao.append((lista[10], lista[11]))
+							print("Adicionado!")
+							return 1
+		print("Nao foi possivel adicionar a lista:")
+		print(lista)
+
 	def imprime(self):
-		print(str(self.ID) + " - " + self.name + ": ")
-		print("\t        Turma: " + str(self.turma))
-		print("\t          Ano: " + str(self.year))
-		print("\t      Periodo: " + str(self.peri))
-		print("\t   Quantidade: " + str(self.size))
-		print("\t      Postura: " + str(self.postura))
-		print("\t      Atuacao: " + str(self.atuacao))
-		print("\tAutoAvaliacao: " + str(self.autoavaliacao))
-		
+		retorno = ""
+		retorno += str(self.ID) + " - " + self.name + ": "
+		retorno += "\t        Turma: " + str(self.turma)
+		retorno += "\t          Ano: " + str(self.year)
+		retorno += "\t      Periodo: " + str(self.peri)
+		retorno += "\t   Quantidade: " + str(self.size)
+		retorno += "\t      Postura: " + str(self.postura)
+		retorno += "\t      Atuacao: " + str(self.atuacao)
+		retorno += "\tAutoAvaliacao: " + str(self.autoavaliacao)
+		print(retorno)
+	def imprime2(self):
+		aux = []
+		name = str(self.ID) + "," + self.name + ","
+		retorno = ""
+		for i in range(len(self.turma)):
+			aux.append("")
+			aux[i] += str(self.turma[i]) + "," + str(self.year[i]) + "," + str(self.peri[i]) + ',' + str(self.size[i]) + ","
+			aux[i] += str(self.postura[i][0]) + ',' + str(self.postura[i][1]) + ','
+			aux[i] += str(self.atuacao[i][0]) + ',' + str(self.atuacao[i][1]) + ','
+			aux[i] += str(self.autoavaliacao[i][0]) + ',' + str(self.autoavaliacao[i][1])
+			retorno += name + aux[i] + '\n'
+		return retorno
+
 def trata_linhas(linhas):
 	n = len(linhas)
 	i = 0
@@ -86,10 +115,9 @@ def trata_linhas(linhas):
 			n -= 1
 	
 
-diretorio = 'avaliacao_docentes/'
-arquivo   = 'avaliacao_docentes.csv'
+arquivo   = sys.argv[1]
 
-linhas = le_arquivo(diretorio+arquivo)
+linhas = le_arquivo(arquivo)
 for i in range(len(linhas)):
 	linhas[i] = linhas[i].split(',')
 
@@ -114,4 +142,8 @@ for i in range(0, len(linhas)):
 		lastID   = linhas[i][0]
 		lastName = linhas[i][1]
 
-
+novo_arq = arquivo.split('.')[0] + "Tratado.csv"
+saida = open(novo_arq, "w")
+for professor in professores:
+	saida.write(professor.imprime2())
+saida.close();

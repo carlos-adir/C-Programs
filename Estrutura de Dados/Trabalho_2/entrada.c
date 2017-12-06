@@ -1,16 +1,6 @@
-/* 
-	@file:			entrada.h
-	@author:		Carlos Adir Ely Murussi Leite (carlos.adir.leite@gmail.com)
-	@description:	
-
-
-*/
-
-#include <stdio.h>
-#include <string.h>
-#include <termios.h>
-#include <unistd.h>
-#include <fcntl.h>
+// Carlos Adir Ely Murussi Leite
+// 150121059
+#include "entrada.h"
 
 char getch()/*le um caracter da entrada padrão sem o bloqueio de entrada(nao necessita apertar enter) */
 {
@@ -52,10 +42,6 @@ int kbhit()
 	return 0;
 }
 
-typedef struct
-{
-	char k[10];
-}KEY;
 
 void buffer_clear()
 {
@@ -79,18 +65,16 @@ char opcao(char *opcoes, int quantidade)
 	}
 	return -1;
 }
-
+/*
 char opcao2(char *opcoes, int quantidade)
 {
-	/* Requer do usuário um caracter até que ele esteja na lista de opcoes */
-	/* Retorna -1 se a quantidade for 0 ou negativo */
 	char c = -1;
 	if(quantidade < 1)
 		return -1;
 	while(c == -1)
 		c = opcao(opcoes, quantidade);
 	return c;
-}
+}*/
 
 
 KEY t1(int n1)
